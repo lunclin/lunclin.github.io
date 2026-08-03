@@ -405,35 +405,186 @@
 }
 
 /* Текстовая часть */
+/* ===== ПРОЕКТЫ ===== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.project-item {
+    background: rgba(18, 27, 14, 0.75);
+    backdrop-filter: blur(4px);
+    border-radius: 32px;
+    overflow: hidden;
+    border: 1px solid rgba(78, 139, 59, 0.3);
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    position: relative;
+    box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Верхняя светящаяся полоска */
+.project-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+    z-index: 2;
+}
+
+.project-item:hover::before {
+    transform: scaleX(1);
+}
+
+.project-item:hover {
+    transform: translateY(-12px);
+    border-color: var(--primary);
+    box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(78, 139, 59, 0.3);
+}
+
+/* ===== КАРТИНКА ===== */
+.project-img {
+    height: 220px;
+    background: linear-gradient(135deg, #1f2e1a, #0e170c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.project-img img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    border-radius: 18px;
+    transition: transform 0.4s ease, filter 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.project-item:hover .project-img img {
+    transform: scale(1.04);
+    filter: brightness(1.05) contrast(1.02);
+}
+
+.placeholder-icon {
+    font-size: 4rem;
+    color: rgba(78, 139, 59, 0.3);
+    transition: all 0.4s ease;
+}
+
+.project-item:hover .placeholder-icon {
+    transform: scale(1.2);
+    color: rgba(78, 139, 59, 0.6);
+}
+
+/* ===== ОВЕРЛЕЙ С ИКОНКОЙ ===== */
+.project-link-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+}
+
+.project-item:hover .project-link-overlay {
+    opacity: 1;
+}
+
+.project-link-overlay i {
+    font-size: 2.5rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 16px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.project-item:hover .project-link-overlay i {
+    transform: scale(1.1);
+}
+
+/* ===== ИНФОРМАЦИЯ ===== */
 .project-info {
     padding: 1.6rem;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* ===== ТЕГИ (бейджи) - ГЛАВНЫЙ ФИКС ===== */
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    align-items: center;
 }
 
 .project-badge {
-    display: inline-block;
-    background: rgba(78, 139, 59, 0.25);
-    backdrop-filter: blur(2px);
-    color: var(--primary-light);
-    padding: 5px 14px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 12px;
     border-radius: 40px;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    margin-bottom: 1rem;
     letter-spacing: 0.3px;
-    border: 1px solid rgba(78, 139, 59, 0.4);
-    transition: all 0.2s;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    height: 24px;
+    line-height: 1;
 }
 
-.project-item:hover .project-badge {
+/* Статус: Концепт / В разработке */
+.project-badge.status {
+    background: rgba(78, 139, 59, 0.2);
+    color: var(--primary-light);
+    border: 1px solid rgba(78, 139, 59, 0.3);
+}
+
+/* Платформа: Roblox */
+.project-badge.platform {
+    background: rgba(255, 255, 255, 0.06);
+    color: #a0b895;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-item:hover .project-badge.status {
     background: rgba(78, 139, 59, 0.4);
     border-color: var(--primary);
     color: #e0f5d8;
 }
 
+.project-item:hover .project-badge.platform {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #d4ecd0;
+}
+
+/* ===== ТЕКСТ ===== */
 .project-info h3 {
-    font-size: 1.7rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
     font-weight: 700;
     letter-spacing: -0.3px;
     background: linear-gradient(135deg, #fff, #d4ecd0);
@@ -445,8 +596,10 @@
 .project-info p {
     color: #cde5c2;
     line-height: 1.5;
-    font-size: 0.95rem;
-} 
+    font-size: 0.92rem;
+    margin: 0;
+    flex: 1;
+}
 
         /* Roadmap карточки */
         .roadmap-cards {
@@ -541,36 +694,68 @@
 
         /* Команда */
         .team-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-        }
-        .team-card {
-            background: var(--card-bg);
-            border-radius: 32px;
-            padding: 1.8rem;
-            text-align: center;
-            width: 240px;
-            border: 1px solid var(--border-color);
-            transition: 0.3s;
-        }
-        .team-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--primary);
-        }
-        .team-avatar {
-            font-size: 3.5rem;
-            background: #1e2a18;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            border-radius: 60px;
-            color: var(--primary);
-        }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.team-card {
+    background: var(--card-bg);
+    border-radius: 32px;
+    padding: 1.8rem;
+    text-align: center;
+    width: 220px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.team-avatar {
+    font-size: 3.5rem;
+    background: #1e2a18;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    border-radius: 60px;
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.team-card:hover .team-avatar {
+    background: #2a3a22;
+    transform: scale(1.05);
+}
+
+.team-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.team-card p {
+    color: #a0b895;
+    font-size: 0.85rem;
+}
+
+.team-card .vacancy-badge {
+    display: inline-block;
+    background: rgba(255, 170, 51, 0.2);
+    color: #ffaa33;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(255, 170, 51, 0.3);
+}
 
         /* Контакты */
         .contact-flex {
@@ -672,6 +857,31 @@
             .roadmap-date { min-width: auto; }
             .support-options { flex-direction: column; align-items: center; }
         }
+
+        /* ===== ФИКС ДЛЯ КАРТОЧЕК ===== */
+.project-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-img {
+    flex-shrink: 0;
+}
+
+.project-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-info p {
+    flex: 1;
+}
+
+.project-link-overlay {
+    cursor: pointer;
+}
+
         /* ========== ЦВЕТНОЙ СКРОЛЛ ========== */
 ::-webkit-scrollbar {
     width: 8px;
@@ -764,51 +974,75 @@
         </div>
     </section>
 
-    <section id="projects">
-        <div class="container">
-            <h2>Наши игры</h2>
-            <div class="section-sub">Что уже в разработке, а что ещё в мыслях.</div>
-            <div class="projects-grid">
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <a href="https://www.roblox.com/games/93338982728315/Frostvale-RP" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
-                            <img src="FrostvaleRP.jpg" alt="Frostvale Role Play">
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <span class="project-badge">В разработке [заморожен]</span>
-                        <span class="project-badge">Roblox</span>
-                        <h3>Frostvale Role Play</h3>
-                        <p>Ролевая игра в Roblox с открытым миром и атмосферой 00-х.</p>
-                    </div>
+<!-- ===== ПРОЕКТЫ ===== -->
+<section id="projects">
+    <div class="container">
+        <h2>Наши игры</h2>
+        <div class="section-sub">Что уже в разработке, а что ещё в мыслях.</div>
+        <div class="projects-grid">
+            
+            <!-- Карточка 1: Frostvale RP -->
+            <div class="project-item fade-up">
+                <div class="project-img">
+                    <img src="FrostvaleRP.jpg" alt="Frostvale Role Play" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
+                    <a href="https://www.roblox.com/share?code=a63b220bb76d7d40b744446382b72591&type=ExperienceDetails&stamp=1785743805280" target="_blank" class="project-link-overlay">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
                 </div>
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="The Church of Silence.jpg" alt="The Church of Silence">
+                <div class="project-info">
+                    <div class="project-tags">
+                        <span class="project-badge status">В разработке</span>
+                        <span class="project-badge platform">Roblox</span>
                     </div>
-                    <div class="project-info">
-                        <span class="project-badge">Концепт</span>
-                        <span class="project-badge">Roblox</span>
-                        <h3>The Church of Silence</h3>
-                        <p>Survival horror, где вы исследуете подозрительную церковь.</p>
-                    </div>
-                </div>
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="Recognize The Traitor.jpg" alt="Recognize The Traitor">
-                    </div>
-                    <div class="project-info">
-                        <span class="project-badge">Концепт</span>
-                        <span class="project-badge">Roblox</span>
-                        <h3>Recognize The Traitor</h3>
-                        <p>Все игроки одинаковы. Вычисли убийцу по поведению.</p>
-                    </div>
+                    <h3>Frostvale Role Play</h3>
+                    <p>Ролевая игра с открытым миром и атмосферой 00-х.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <section id="roadmap">
+            <!-- Карточка 2: The Church of Silence -->
+            <div class="project-item fade-up">
+                <div class="project-img">
+                    <img src="The Church of Silence.jpg" alt="The Church of Silence" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="placeholder-icon" style="display:none;"><i class="fas fa-church"></i></div>
+                    <a href="#" class="project-link-overlay" onclick="alert('Игра в разработке. Скоро будет доступна!'); return false;">
+                        <i class="fas fa-lock"></i>
+                    </a>
+                </div>
+                <div class="project-info">
+                    <div class="project-tags">
+                        <span class="project-badge status">Концепт</span>
+                        <span class="project-badge platform">Roblox</span>
+                    </div>
+                    <h3>The Church of Silence</h3>
+                    <p>Survival horror, где вы исследуете подозрительную церковь.</p>
+                </div>
+            </div>
+
+            <!-- Карточка 3: Recognize The Traitor -->
+            <div class="project-item fade-up">
+                <div class="project-img">
+                    <img src="Recognize The Traitor.jpg" alt="Recognize The Traitor" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="placeholder-icon" style="display:none;"><i class="fas fa-user-secret"></i></div>
+                    <a href="#" class="project-link-overlay" onclick="alert('Игра в разработке. Скоро будет доступна!'); return false;">
+                        <i class="fas fa-lock"></i>
+                    </a>
+                </div>
+                <div class="project-info">
+                    <div class="project-tags">
+                        <span class="project-badge status">Концепт</span>
+                        <span class="project-badge platform">Roblox</span>
+                    </div>
+                    <h3>Recognize The Traitor</h3>
+                    <p>Все игроки одинаковы. Вычисли убийцу по поведению.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+     <section id="roadmap">
         <div class="container">
             <h2>Ближайшие планы</h2>
             <div class="section-sub">Что и когда выходит.</div>
@@ -857,52 +1091,55 @@
             <h2>Частые вопросы</h2>
             <div class="title-wrap"><div class="underline-center"></div></div>
             <div class="faq-grid">
-                <div class="faq-item fade-up"><div class="faq-question">Будут ли игры не только в Roblox?</div><div>Да. Студия уже занимается разработкой и первыми набросками будущей игры на Unity. Релиз в Steam и на Itcho.</div></div>
-                <div class="faq-item fade-up"><div class="faq-question">Когда выйдет Frostvale RP?</div><div>Уже можно играть. Игра в открытом альфа тестировании (Roblox).</div></div>
-                <div class="faq-item fade-up"><div class="faq-question">Как помочь студии, кроме денег?</div><div>Рассказывать друзьям, давать фидбек в Telegram, тестировать новые механики.</div></div>
+                <div class="faq-item fade-up"><div class="faq-question">Будут ли игры не только в Roblox?</div><div>— Да. Студия уже делает первые наброски будущей игры на Unity. Релиз в Steam.</div></div>
+                <div class="faq-item fade-up"><div class="faq-question">Когда выйдет Frostvale RP?</div><div>— Уже можно играть. Игра в открытом альфа тестировании (Roblox), постоянно обновляется.</div></div>
+                <div class="faq-item fade-up"><div class="faq-question">Как помочь студии, кроме денег?</div><div>— Рассказывать друзьям, давать фидбек в Telegram, тестировать новые механики.</div></div>
             </div>
         </div>
     </section>
 
-    <section id="team">
-        <div class="container">
-            <h2>За кулисами</h2>
-            <div class="section-sub">Небольшая команда, которая делает всё от идеи до релиза.</div>
-            <div class="team-grid">
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-dragon"></i></div>
-                    <h4>Keypht</h4>
-                    <p>Геймдизайнер & Программист</p>
-                </div>
-
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-palette"></i></div>
-                    <h4>CrazyKreeke66</h4>
-                    <p>Дизайнер</p>
-                </div>
-
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-cube"></i></div>
-                    <h4>СВОБОДНАЯ ВАКАНСИЯ</h4>
-                    <p>3D-Моделер</p>
-                </div>
-
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-pen-ruler"></i></div>
-                    <h4>СВОБОДНАЯ ВАКАНСИЯ</h4>
-                    <p>GUI Дизайнер</p>
-                </div>
-
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-film"></i></div>
-                    <h4>СВОБОДНАЯ ВАКАНСИЯ</h4>
-                    <p>Аниматор</p>
-                </div>
+<section id="team">
+    <div class="container">
+        <h2>За кулисами</h2>
+        <div class="section-sub">Небольшая команда, которая делает всё от идеи до релиза.</div>
+        <div class="team-grid">
+            
+            <div class="team-card fade-up">
+                <div class="team-avatar"><i class="fas fa-dragon"></i></div>
+                <h4>Keypht</h4>
+                <p>Геймдизайнер & Программист</p>
             </div>
-        </div>
 
-        
-    </section>
+            <div class="team-card fade-up">
+                <div class="team-avatar"><i class="fas fa-palette"></i></div>
+                <h4>CrazyKreeke66</h4>
+                <p>Дизайнер</p>
+            </div>
+
+            <div class="team-card fade-up">
+                <div class="team-avatar"><i class="fas fa-cube"></i></div>
+                <h4>Вакансия</h4>
+                <p>3D-Моделер</p>
+                <span class="vacancy-badge">Ждём тебя!</span>
+            </div>
+
+            <div class="team-card fade-up">
+                <div class="team-avatar"><i class="fas fa-pen-ruler"></i></div>
+                <h4>Вакансия</h4>
+                <p>GUI Дизайнер</p>
+                <span class="vacancy-badge">Ждём тебя!</span>
+            </div>
+
+            <div class="team-card fade-up">
+                <div class="team-avatar"><i class="fas fa-film"></i></div>
+                <h4>Вакансия</h4>
+                <p>Аниматор</p>
+                <span class="vacancy-badge">Ждём тебя!</span>
+            </div>
+
+        </div>
+    </div>
+</section>
 
     <section id="contact">
         <div class="container">
@@ -913,8 +1150,8 @@
                     <h3>LUNCLIN <span style="color:var(--primary)">Studio</span></h3>
                     <p>Из Нижнего Новгорода с любовью к играм.</p>
                     <div class="contact-details">
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:lunclin.studio@gmail.com" style="color: inherit; text-decoration: none;">lunclin.studio@gmail.com</a></p>
-                        <p><i class="fab fa-telegram"></i> <a href="https://t.me/LunclinStudio" target="_blank" style="color: inherit; text-decoration: none;">t.me/LunclinStudio</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="lunclin.studio@gmail.com" style="color: inherit; text-decoration: none;">lunclin.studio@gmail.com</a></p>
+                        <p><i class="fab fa-telegram"></i> <a href="https://t.me/lunclin" target="_blank" style="color: inherit; text-decoration: none;">t.me/lunclin</a></p>
                         <p><i class="fas fa-users"></i> <a href="https://www.roblox.com/communities/35756576/LUNCLIN-Indie-Studio#!/about" target="_blank" style="color: inherit; text-decoration: none;">Группа в Roblox</a></p>
                         <p><i class="fas fa-map-marker-alt"></i> Нижний Новгород / Россия</p>
                     </div>
@@ -1051,4 +1288,4 @@
     });
 </script>
 </body>
-</html>   
+</html>
