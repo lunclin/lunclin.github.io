@@ -13,6 +13,9 @@
             --primary-dark: #3a692b;
             --primary-light: #6dab56;
             --primary-glow: rgba(78, 139, 59, 0.4);
+            --ember: #ffb45e;
+            --ember-soft: #ffcf8a;
+            --ember-glow: rgba(255, 180, 94, 0.35);
             --bg-dark: #0b1309;
             --card-bg: #171f14;
             --text-light: #f0f7ea;
@@ -24,6 +27,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) #0a1a05;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -31,33 +40,11 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             line-height: 1.5;
-            scroll-behavior: smooth;
             overflow-x: hidden;
         }
 
-        .floating-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(78, 139, 59, 0.25);
-            border-radius: 50%;
-            animation: floatParticle linear infinite;
-        }
-
-        @keyframes floatParticle {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.4; }
-            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        ::selection {
+            background: rgba(78, 139, 59, 0.4);
         }
 
         body::before {
@@ -71,18 +58,203 @@
             z-index: -2;
         }
 
-        .deco-circle {
+        /* === ФОНОВЫЕ СЛОИ: светлячки + туман + декор === */
+        .bg-wrap {
             position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .deco-circle {
+            position: absolute;
             border-radius: 50%;
             background: var(--primary-glow);
             filter: blur(60px);
-            z-index: -1;
             opacity: 0.3;
-            pointer-events: none;
+            will-change: transform;
         }
 
         .deco-1 { width: 300px; height: 300px; top: 10%; left: -100px; }
         .deco-2 { width: 400px; height: 400px; bottom: 0; right: -150px; }
+
+        .fog {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .fog-layer {
+            position: absolute;
+            left: -30%;
+            width: 160%;
+            height: 55vh;
+            filter: blur(60px);
+            will-change: transform;
+            animation: fogDrift var(--fog-dur, 30s) ease-in-out infinite alternate;
+        }
+
+        .fog-1 {
+            top: 6%;
+            opacity: 0.32;
+            background: radial-gradient(ellipse at center, rgba(90, 140, 70, 0.5), rgba(20, 40, 15, 0.25) 60%, transparent 75%);
+            --fog-dur: 26s;
+            animation-delay: -12s;
+        }
+
+        .fog-2 {
+            bottom: 0;
+            opacity: 0.24;
+            background: radial-gradient(ellipse at center, rgba(150, 100, 55, 0.4), transparent 70%);
+            --fog-dur: 36s;
+            animation-delay: -20s;
+        }
+
+        .fog-3 {
+            top: 42%;
+            opacity: 0.18;
+            background: radial-gradient(ellipse at center, rgba(80, 120, 90, 0.35), transparent 70%);
+            --fog-dur: 44s;
+            animation-delay: -30s;
+        }
+
+        @keyframes fogDrift {
+            from { transform: translateX(-8%) scale(1); }
+            to { transform: translateX(8%) scale(1.18); }
+        }
+
+        .fireflies {
+            position: absolute;
+            inset: 0;
+        }
+
+        .firefly {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffe9a8 0%, #ffcf6b 40%, rgba(255, 190, 90, 0) 70%);
+            box-shadow: 0 0 6px 2px rgba(255, 205, 130, 0.45), 0 0 18px 6px rgba(255, 170, 80, 0.16);
+            animation: fly var(--fly-dur, 20s) linear infinite, flicker var(--flick-dur, 2s) ease-in-out infinite;
+        }
+
+        .firefly-green {
+            background: radial-gradient(circle, #d9f7c0 0%, #9fd97e 40%, rgba(140, 220, 120, 0) 70%);
+            box-shadow: 0 0 6px 2px rgba(160, 220, 130, 0.4), 0 0 18px 6px rgba(120, 200, 100, 0.14);
+        }
+
+        @keyframes fly {
+            0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+            10%  { opacity: 1; }
+            25%  { transform: translate(var(--fx1, 20px), -18vh) scale(0.92); }
+            50%  { transform: translate(var(--fx2, -30px), -42vh) scale(1.06); }
+            75%  { transform: translate(var(--fx3, 15px), -64vh) scale(0.95); }
+            90%  { opacity: 1; }
+            100% { transform: translate(0, -85vh) scale(1); opacity: 0; }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.12; }
+            20% { opacity: 0.95; }
+            40% { opacity: 0.3; }
+            60% { opacity: 0.8; }
+            80% { opacity: 0.25; }
+        }
+
+        /* === ПЛЁНОЧНЫЙ ЭФФЕКТ: зерно + виньетка === */
+        .film-grain {
+            position: fixed;
+            top: -50px;
+            left: -50px;
+            width: calc(100% + 100px);
+            height: calc(100% + 100px);
+            pointer-events: none;
+            z-index: 9001;
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            animation: grainShift 0.9s steps(6) infinite;
+        }
+
+        @keyframes grainShift {
+            0%   { transform: translate(0, 0); }
+            20%  { transform: translate(-12px, 8px); }
+            40%  { transform: translate(8px, -12px); }
+            60%  { transform: translate(-8px, -8px); }
+            80%  { transform: translate(12px, 12px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9000;
+            background: radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(2, 5, 2, 0.4) 100%);
+        }
+
+        /* === КАСТОМНЫЙ КУРСОР === */
+        @media (pointer: fine) {
+            body, a, button, input, textarea { cursor: none; }
+        }
+
+        .cursor-dot, .cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 10002;
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            box-shadow: 0 0 8px rgba(255, 220, 160, 0.6);
+        }
+
+        .cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid rgba(255, 220, 160, 0.55);
+            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .cursor-ring.is-hover {
+            width: 58px;
+            height: 58px;
+            border-color: var(--ember);
+            background: rgba(255, 180, 94, 0.08);
+        }
+
+        .cursor-ring.is-down {
+            border-color: var(--primary-light);
+            background: rgba(78, 139, 59, 0.12);
+        }
+
+        /* === ТОСТ-ПАСХАЛКА === */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translate(-50%, 20px);
+            opacity: 0;
+            background: rgba(23, 31, 20, 0.95);
+            border: 1px solid rgba(255, 180, 94, 0.5);
+            color: #ffe3bd;
+            padding: 12px 20px;
+            border-radius: 40px;
+            z-index: 10001;
+            transition: opacity 0.4s ease, transform 0.4s var(--transition-smooth);
+            pointer-events: none;
+            box-shadow: 0 0 25px rgba(255, 180, 94, 0.15);
+            font-size: 0.9rem;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
 
         .container {
             max-width: 1280px;
@@ -129,11 +301,12 @@
             height: 4px;
             background: var(--primary);
             border-radius: 4px;
-            transition: width 0.3s ease;
+            transition: width 0.3s ease, box-shadow 0.3s ease;
         }
 
         h2:hover::after {
             width: 120px;
+            box-shadow: 0 0 12px var(--ember-glow), 0 0 4px var(--ember-glow);
         }
 
         .section-sub {
@@ -163,7 +336,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             transition: left 0.4s ease;
             z-index: -1;
         }
@@ -174,7 +347,7 @@
             background: var(--primary);
             border: 2px solid var(--primary);
             color: #0f1a0c;
-            box-shadow: 0 4px 15px rgba(78,139,59,0.3);
+            box-shadow: 0 4px 15px rgba(78, 139, 59, 0.3);
         }
 
         .btn-primary:hover {
@@ -221,12 +394,20 @@
             height: 40px;
             width: auto;
             display: block;
-            transition: transform 0.3s ease;
             object-fit: contain;
+            transition: transform 0.3s ease;
         }
 
         .logo-image:hover {
-            transform: scale(1.05);
+            animation: glitch 0.45s steps(2) 1;
+        }
+
+        @keyframes glitch {
+            0%   { transform: translate(0, 0); filter: none; }
+            20%  { transform: translate(-2px, 1px) skewX(-4deg); filter: hue-rotate(40deg); }
+            40%  { transform: translate(2px, -1px); filter: hue-rotate(-30deg) brightness(1.3); }
+            60%  { transform: translate(-1px, -1px) skewX(3deg); filter: hue-rotate(20deg) saturate(1.4); }
+            100% { transform: translate(0, 0); filter: none; }
         }
 
         .logo {
@@ -238,6 +419,12 @@
         .logo span {
             color: var(--primary);
             text-shadow: 0 0 5px var(--primary-glow);
+            animation: glowPulse 3.5s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 5px var(--primary-glow); }
+            50% { text-shadow: 0 0 14px var(--primary-glow), 0 0 4px rgba(255, 180, 94, 0.25); }
         }
 
         .logo-icon {
@@ -278,6 +465,7 @@
             color: var(--primary-light);
         }
 
+        /* === ГЛАВНЫЙ ЭКРАН === */
         .hero {
             min-height: 85vh;
             display: flex;
@@ -286,7 +474,6 @@
 
         .hero-content {
             max-width: 680px;
-            animation: fadeInUp 1s ease-out;
         }
 
         .hero h1 {
@@ -296,9 +483,26 @@
             font-weight: 800;
         }
 
-        .hero .accent {
+        .hero .word {
+            display: inline-block;
+            opacity: 0;
+            animation: wordIn 0.9s var(--transition-smooth) forwards;
+        }
+
+        .hero .word.accent {
             color: var(--primary);
-            text-shadow: 0 0 10px var(--primary-glow);
+            animation-name: wordInGlow;
+        }
+
+        @keyframes wordIn {
+            0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes wordInGlow {
+            0% { opacity: 0; transform: translateY(24px); filter: blur(10px); text-shadow: 0 0 0 rgba(78, 139, 59, 0); }
+            60% { text-shadow: 0 0 22px var(--primary-glow), 0 0 6px var(--primary-glow); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); text-shadow: 0 0 12px var(--primary-glow); }
         }
 
         .hero p {
@@ -307,11 +511,13 @@
             color: #cde5c2;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
+        /* === СЕКЦИИ === */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -330,8 +536,8 @@
 
         .feature-card:hover {
             transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.6);
+            border-color: rgba(255, 180, 94, 0.45);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 180, 94, 0.07);
         }
 
         .feature-icon {
@@ -339,12 +545,19 @@
             color: var(--primary);
             margin-bottom: 1.2rem;
             display: inline-block;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--ember);
+            text-shadow: 0 0 16px var(--ember-glow);
         }
 
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+            perspective: 1200px;
         }
 
         .project-item {
@@ -353,12 +566,13 @@
             border-radius: 32px;
             overflow: hidden;
             border: 1px solid rgba(78, 139, 59, 0.3);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: transform 0.15s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
             position: relative;
             box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             height: 100%;
+            will-change: transform;
         }
 
         .project-item::before {
@@ -368,7 +582,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light), transparent);
+            background: linear-gradient(90deg, var(--primary), var(--ember), transparent);
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.5s ease;
@@ -380,9 +594,8 @@
         }
 
         .project-item:hover {
-            transform: translateY(-12px);
-            border-color: var(--primary);
-            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(78, 139, 59, 0.3);
+            border-color: rgba(255, 190, 110, 0.55);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 180, 94, 0.18), 0 0 30px rgba(255, 180, 94, 0.08);
         }
 
         .project-img {
@@ -396,6 +609,14 @@
             flex-shrink: 0;
         }
 
+        .project-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(2, 6, 2, 0.45) 100%);
+            pointer-events: none;
+        }
+
         .project-img img {
             max-width: 85%;
             max-height: 85%;
@@ -403,11 +624,11 @@
             border-radius: 18px;
             transition: transform 0.4s ease, filter 0.3s ease;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            will-change: transform;
         }
 
         .project-item:hover .project-img img {
-            transform: scale(1.04);
-            filter: brightness(1.05) contrast(1.02);
+            filter: brightness(1.08) contrast(1.03);
         }
 
         .placeholder-icon {
@@ -421,6 +642,7 @@
             color: rgba(78, 139, 59, 0.6);
         }
 
+        /* Секретный тизер поверх карточки */
         .project-link-overlay {
             position: absolute;
             top: 0;
@@ -431,27 +653,57 @@
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(2px);
+            transition: opacity 0.35s ease;
+            background: radial-gradient(ellipse at center, rgba(10, 18, 8, 0.35), rgba(3, 6, 3, 0.82));
+            backdrop-filter: blur(3px);
             cursor: pointer;
+            text-decoration: none;
+            z-index: 1;
         }
 
         .project-item:hover .project-link-overlay {
             opacity: 1;
         }
 
-        .project-link-overlay i {
-            font-size: 2.5rem;
-            color: white;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 16px;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
+        .secret-box {
+            text-align: center;
+            padding: 0 24px;
+            transform: translateY(14px);
+            transition: transform 0.4s var(--transition-smooth);
         }
 
-        .project-item:hover .project-link-overlay i {
-            transform: scale(1.1);
+        .project-item:hover .secret-box {
+            transform: translateY(0);
+        }
+
+        .secret-icon {
+            font-size: 1.6rem;
+            color: var(--ember);
+            margin-bottom: 0.6rem;
+            filter: drop-shadow(0 0 8px var(--ember-glow));
+        }
+
+        .secret-text {
+            color: #fff;
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .secret-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 0.8rem;
+            padding: 4px 14px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cdd9c4;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
 
         .project-info {
@@ -549,7 +801,7 @@
 
         .roadmap-card:hover {
             transform: translateX(8px);
-            border-color: var(--primary);
+            border-color: rgba(255, 180, 94, 0.45);
             background: rgba(30, 40, 24, 0.8);
         }
 
@@ -558,6 +810,11 @@
             color: var(--primary);
             width: 50px;
             text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .roadmap-card:hover .roadmap-icon {
+            color: var(--ember);
         }
 
         .roadmap-date {
@@ -573,18 +830,33 @@
         }
 
         .support-card {
-            background: linear-gradient(135deg, rgba(78, 139, 59, 0.15), rgba(0,0,0,0.4));
+            background: linear-gradient(135deg, rgba(78, 139, 59, 0.15), rgba(0, 0, 0, 0.4));
             border-radius: 48px;
             padding: 2.5rem;
             text-align: center;
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 20px rgba(78,139,59,0.2);
+            border: 1px solid rgba(255, 180, 94, 0.45);
+            box-shadow: 0 0 20px rgba(255, 180, 94, 0.15);
             transition: 0.3s;
         }
 
         .support-card:hover {
             transform: scale(1.01);
-            box-shadow: 0 0 30px rgba(78,139,59,0.4);
+            box-shadow: 0 0 30px rgba(255, 180, 94, 0.3);
+        }
+
+        .support-heart {
+            font-size: 3rem;
+            color: #ff7b89;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: heartbeat 1.8s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.18); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.14); }
         }
 
         .support-options {
@@ -596,7 +868,7 @@
         }
 
         .support-option {
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 1.5rem;
             padding: 1rem 1.5rem;
             min-width: 160px;
@@ -610,6 +882,24 @@
             display: inline-block;
         }
 
+        .btn-boosty {
+            background: #ffaa33;
+            color: #1f2c00;
+            border: 2px solid #ffaa33;
+            box-shadow: 0 4px 15px rgba(255, 170, 51, 0.25);
+            animation: breath 2.8s ease-in-out infinite;
+        }
+
+        .btn-boosty:hover {
+            background: #ff9c14;
+            transform: translateY(-4px);
+        }
+
+        @keyframes breath {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 170, 51, 0.35), 0 4px 15px rgba(255, 170, 51, 0.25); }
+            50% { box-shadow: 0 0 0 14px rgba(255, 170, 51, 0), 0 4px 24px rgba(255, 170, 51, 0.45); }
+        }
+
         .faq-grid {
             display: grid;
             gap: 1rem;
@@ -618,11 +908,17 @@
         }
 
         .faq-item {
-            background: rgba(0,0,0,0.45);
+            background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(6px);
             border-radius: 30px;
             padding: 1.2rem 1.8rem;
             border-left: 5px solid var(--primary);
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-left-color: var(--ember);
+            background: rgba(6, 12, 5, 0.55);
         }
 
         .faq-question {
@@ -651,8 +947,8 @@
 
         .team-card:hover {
             transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 180, 94, 0.4);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 180, 94, 0.06);
         }
 
         .team-avatar {
@@ -684,7 +980,7 @@
 
         .team-card:hover .team-avatar {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(78, 139, 59, 0.2);
+            box-shadow: 0 0 20px rgba(255, 180, 94, 0.2);
         }
 
         .team-card:hover .team-avatar img {
@@ -755,7 +1051,7 @@
         }
 
         .social-links a:hover {
-            color: var(--primary);
+            color: var(--ember);
             transform: translateY(-4px);
         }
 
@@ -773,7 +1069,7 @@
         input:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(78,139,59,0.2);
+            box-shadow: 0 0 0 3px rgba(78, 139, 59, 0.2);
         }
 
         button[type="submit"] {
@@ -797,13 +1093,26 @@
         .fade-up {
             opacity: 0;
             transform: translateY(40px);
-            transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth);
+            filter: blur(6px);
+            transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth), filter 0.8s var(--transition-smooth);
         }
 
         .fade-up.visible {
             opacity: 1;
             transform: translateY(0);
+            filter: blur(0);
         }
+
+        .features-grid > .fade-up:nth-child(2) { transition-delay: 0.1s; }
+        .features-grid > .fade-up:nth-child(3) { transition-delay: 0.2s; }
+        .features-grid > .fade-up:nth-child(4) { transition-delay: 0.3s; }
+        .projects-grid > .fade-up:nth-child(2) { transition-delay: 0.1s; }
+        .projects-grid > .fade-up:nth-child(3) { transition-delay: 0.2s; }
+        .projects-grid > .fade-up:nth-child(4) { transition-delay: 0.3s; }
+        .team-grid > .fade-up:nth-child(2) { transition-delay: 0.08s; }
+        .team-grid > .fade-up:nth-child(3) { transition-delay: 0.16s; }
+        .team-grid > .fade-up:nth-child(4) { transition-delay: 0.24s; }
+        .team-grid > .fade-up:nth-child(5) { transition-delay: 0.32s; }
 
         footer {
             background: #081205;
@@ -833,9 +1142,15 @@
             background: linear-gradient(135deg, var(--primary-light), var(--primary));
         }
 
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) #0a1a05;
+        /* === ДОСТУПНОСТЬ: отключаем анимации по запросу === */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .fade-up, .hero .word { opacity: 1 !important; transform: none !important; filter: none !important; }
         }
 
         @media (max-width: 780px) {
@@ -864,9 +1179,22 @@
 </head>
 <body>
 
-<div class="floating-bg" id="floatingBg"></div>
-<div class="deco-circle deco-1"></div>
-<div class="deco-circle deco-2"></div>
+<div class="bg-wrap" id="bgWrap">
+    <div class="deco-circle deco-1"></div>
+    <div class="deco-circle deco-2"></div>
+    <div class="fog">
+        <div class="fog-layer fog-1"></div>
+        <div class="fog-layer fog-2"></div>
+        <div class="fog-layer fog-3"></div>
+    </div>
+    <div class="fireflies" id="fireflies"></div>
+</div>
+<div class="vignette"></div>
+<div class="film-grain"></div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="toast" id="toast"></div>
 
 <header>
     <div class="container navbar">
@@ -887,8 +1215,11 @@
 <main>
     <section class="hero">
         <div class="container hero-content">
-            <h1>Делаем игры,<br> которые <span class="accent">хочется проходить</span></h1>
-            <p>LUNCLIN — инди-студия из Нижнего Новгорода. Создаем игры в Roblox и за его пределами (перехдим на Unity).</p>
+            <h1>
+                <span class="word">Делаем</span> <span class="word">игры,</span><br>
+                <span class="word">которые</span> <span class="word accent">хочется</span> <span class="word accent">проходить</span>
+            </h1>
+            <p>LUNCLIN — инди-студия из Нижнего Новгорода. Создаем игры в Roblox и за его пределами (переходим на Unity).</p>
             <div class="hero-buttons">
                 <a href="#projects" class="btn btn-primary">Наши проекты</a>
                 <a href="#contact" class="btn btn-outline">Связаться</a>
@@ -936,7 +1267,11 @@
                         <img src="UP.jpg" alt="UP!" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
                         <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <i class="fas fa-lock"></i>
+                            <div class="secret-box">
+                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
+                                <p class="secret-text">«Иногда вверх — единственное направление.»</p>
+                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
+                            </div>
                         </a>
                     </div>
                     <div class="project-info">
@@ -954,7 +1289,11 @@
                         <img src="FrostvaleRP.jpg" alt="Frostvale Role Play" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
                         <a href="https://www.roblox.com/share?code=a63b220bb76d7d40b744446382b72591&type=ExperienceDetails&stamp=1785743805280" target="_blank" class="project-link-overlay">
-                            <i class="fas fa-external-link-alt"></i>
+                            <div class="secret-box">
+                                <div class="secret-icon"><i class="fas fa-external-link-alt"></i></div>
+                                <p class="secret-text">«Зима уже наступила. Загляни.»</p>
+                                <span class="secret-hint"><i class="fas fa-play"></i> Играть</span>
+                            </div>
                         </a>
                     </div>
                     <div class="project-info">
@@ -972,7 +1311,11 @@
                         <img src="The Church of Silence.jpg" alt="The Church of Silence" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-church"></i></div>
                         <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <i class="fas fa-lock"></i>
+                            <div class="secret-box">
+                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
+                                <p class="secret-text">«Тишина в церкви — не всегда благодать.»</p>
+                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
+                            </div>
                         </a>
                     </div>
                     <div class="project-info">
@@ -990,7 +1333,11 @@
                         <img src="Recognize The Traitor.jpg" alt="Recognize The Traitor" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-user-secret"></i></div>
                         <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <i class="fas fa-lock"></i>
+                            <div class="secret-box">
+                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
+                                <p class="secret-text">«Среди одинаковых всегда есть один другой.»</p>
+                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
+                            </div>
                         </a>
                     </div>
                     <div class="project-info">
@@ -1036,14 +1383,14 @@
             <h2>Поддержать студию</h2>
             <div class="section-sub">Любая помощь — вклад в будущие игры.</div>
             <div class="support-card fade-up">
-                <i class="fas fa-heart" style="font-size: 3rem; color: #ff7b89; margin-bottom: 1rem;"></i>
+                <i class="fas fa-heart support-heart"></i>
                 <p style="font-size: 1.2rem;">Если тебе нравится то, что мы делаем, поддержи нас.</p>
                 <div class="support-options">
                     <div class="support-option"><i class="fab fa-boosty"></i><p><strong>Boosty</strong><br>Подписка</p></div>
                     <div class="support-option"><i class="fas fa-coffee"></i><p><strong>Разово</strong><br>На кофе</p></div>
                     <div class="support-option"><i class="fas fa-comment"></i><p><strong>Бесплатно</strong><br>Расскажи друзьям</p></div>
                 </div>
-                <a href="https://boosty.to/lunclin" target="_blank" class="btn btn-primary" style="background: #ffaa33; color: #1f2c00;">Поддержать на Boosty →</a>
+                <a href="https://boosty.to/lunclin" target="_blank" class="btn btn-boosty">Поддержать на Boosty →</a>
             </div>
         </div>
     </section>
@@ -1164,23 +1511,113 @@
 </footer>
 
 <script>
-    const bgContainer = document.getElementById('floatingBg');
-    function createParticles() {
-        for (let i = 0; i < 80; i++) {
-            const p = document.createElement('div');
-            p.classList.add('particle');
-            const s = Math.random() * 5 + 1.5;
-            p.style.width = s + 'px';
-            p.style.height = s + 'px';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = Math.random() * 14 + 7 + 's';
-            p.style.animationDelay = Math.random() * 12 + 's';
-            p.style.background = `rgba(78, 139, 59, ${Math.random() * 0.4 + 0.1})`;
-            bgContainer.appendChild(p);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ===== Светлячки ===== */
+    function createFireflies() {
+        const container = document.getElementById('fireflies');
+        for (let i = 0; i < 46; i++) {
+            const f = document.createElement('div');
+            f.classList.add('firefly');
+            if (i % 3 === 0) f.classList.add('firefly-green');
+            const s = Math.random() * 3 + 2;
+            f.style.width = s + 'px';
+            f.style.height = s + 'px';
+            f.style.left = Math.random() * 100 + '%';
+            f.style.bottom = Math.random() * 30 - 25 + 'vh';
+            f.style.setProperty('--fx1', (Math.random() * 60 - 30) + 'px');
+            f.style.setProperty('--fx2', (Math.random() * 120 - 60) + 'px');
+            f.style.setProperty('--fx3', (Math.random() * 60 - 30) + 'px');
+            f.style.setProperty('--fly-dur', (Math.random() * 16 + 14) + 's');
+            f.style.setProperty('--flick-dur', (Math.random() * 2.5 + 1.2) + 's');
+            f.style.animationDelay = (-Math.random() * 24) + 's, ' + (-Math.random() * 3) + 's';
+            container.appendChild(f);
         }
     }
-    createParticles();
 
+    /* ===== Параллакс фона при скролле ===== */
+    function initParallax() {
+        const wrap = document.getElementById('bgWrap');
+        const deco1 = document.querySelector('.deco-1');
+        const deco2 = document.querySelector('.deco-2');
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (ticking) return;
+            requestAnimationFrame(() => {
+                const y = window.scrollY;
+                wrap.style.transform = `translateY(${y * 0.05}px)`;
+                if (deco1) deco1.style.transform = `translateY(${y * 0.08}px)`;
+                if (deco2) deco2.style.transform = `translateY(${-y * 0.06}px)`;
+                ticking = false;
+            });
+            ticking = true;
+        }, { passive: true });
+    }
+
+    /* ===== Появление заголовка по словам ===== */
+    document.querySelectorAll('.hero h1 .word').forEach((w, i) => {
+        w.style.animationDelay = `${0.15 + i * 0.14}s`;
+    });
+
+    /* ===== Кастомный курсор ===== */
+    if (window.matchMedia('(pointer: fine)').matches) {
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+        let rx = mx, ry = my;
+        window.addEventListener('mousemove', (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+            dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+        });
+        (function loop() {
+            rx += (mx - rx) * 0.18;
+            ry += (my - ry) * 0.18;
+            ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+            requestAnimationFrame(loop);
+        })();
+        document.querySelectorAll('a, button, input, textarea, .project-item, .feature-card, .btn').forEach(el => {
+            el.addEventListener('mouseenter', () => ring.classList.add('is-hover'));
+            el.addEventListener('mouseleave', () => ring.classList.remove('is-hover'));
+        });
+        window.addEventListener('mousedown', () => ring.classList.add('is-down'));
+        window.addEventListener('mouseup', () => ring.classList.remove('is-down'));
+    }
+
+    /* ===== 3D-tilt карточек игр ===== */
+    document.querySelectorAll('.project-item').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(900px) rotateX(${-py * 8}deg) rotateY(${px * 10}deg) translateY(-12px)`;
+            const img = card.querySelector('.project-img img, .placeholder-icon');
+            if (img) img.style.transform = `scale(1.08) translate(${px * -10}px, ${py * -10}px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+            const img = card.querySelector('.project-img img, .placeholder-icon');
+            if (img) img.style.transform = '';
+        });
+    });
+
+    /* ===== Пасхалка: 5 кликов по логотипу ===== */
+    const toast = document.getElementById('toast');
+    let logoClicks = 0;
+    let logoTimer = null;
+    document.querySelector('.logo-image').addEventListener('click', () => {
+        logoClicks++;
+        clearTimeout(logoTimer);
+        logoTimer = setTimeout(() => logoClicks = 0, 2500);
+        if (logoClicks >= 5) {
+            logoClicks = 0;
+            toast.textContent = '🌙 Лунный свет уже на твоей стороне…';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+    });
+
+    /* ===== Форма ===== */
     const form = document.getElementById('contactForm');
     const feedback = document.getElementById('formFeedback');
     if (form) {
@@ -1206,6 +1643,7 @@
         });
     }
 
+    /* ===== Плавный скролл по якорям ===== */
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
@@ -1218,6 +1656,7 @@
         });
     });
 
+    /* ===== Появление блоков при скролле ===== */
     const fadeElements = document.querySelectorAll('.fade-up');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -1228,6 +1667,12 @@
         });
     }, { threshold: 0.2 });
     fadeElements.forEach(el => observer.observe(el));
+
+    /* ===== Запуск тяжёлых анимаций с учётом доступности ===== */
+    if (!reducedMotion) {
+        createFireflies();
+        initParallax();
+    }
 </script>
 </body>
 </html>
