@@ -33,6 +33,7 @@
 
         html {
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
@@ -1210,6 +1211,10 @@
             .support-card { border-radius: 32px; padding: 1.8rem; }
             .faq-item { padding: 1rem 1.3rem; border-radius: 24px; }
             input, textarea, button[type="submit"] { min-height: 48px; }
+            .fog-layer { filter: blur(30px); }
+            .fog-2, .fog-3 { opacity: 0.12; }
+            .deco-circle { filter: blur(40px); }
+            .film-grain { animation: none; }
         }
 
         /* === СМАРТФОНЫ === */
@@ -1242,7 +1247,20 @@
             .team-card h4 { font-size: 1.05rem; }
             .roadmap-icon { width: 40px; font-size: 1.6rem; }
             .contact-flex { gap: 2rem; }
-            .social-links a { font-size: 1.5rem; margin-right: 1rem; }
+            .social-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+            .social-links a {
+                font-size: 1.4rem;
+                width: 44px;
+                height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 0;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+            }
+            .social-links a:hover { transform: translateY(-3px); }
             footer { padding: 1.5rem 1rem; }
         }
 
@@ -1254,7 +1272,7 @@
             .hero h1 { font-size: 1.8rem; }
             .hero-buttons .btn { font-size: 0.95rem; }
             h2 { font-size: 1.5rem; }
-            .section-sub { font-size: 0.95rem; }
+            .section-sub { font-size: 1rem; }
             .project-badge { font-size: 0.6rem; padding: 3px 10px; }
         }
     </style>
@@ -1598,7 +1616,8 @@
     /* ===== Светлячки ===== */
     function createFireflies() {
         const container = document.getElementById('fireflies');
-        for (let i = 0; i < 46; i++) {
+        const count = window.innerWidth < 640 ? 14 : 46;
+        for (let i = 0; i < count; i++) {
             const f = document.createElement('div');
             f.classList.add('firefly');
             if (i % 3 === 0) f.classList.add('firefly-green');
