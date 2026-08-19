@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>LUNCLIN Studio</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1153,27 +1153,109 @@
             .fade-up, .hero .word { opacity: 1 !important; transform: none !important; filter: none !important; }
         }
 
-        @media (max-width: 780px) {
-            header { padding: 12px 0; }
-            .navbar { flex-direction: column; align-items: center; gap: 12px; }
-            .logo-image { height: 32px; }
-            .logo { font-size: 1.5rem; }
-            .nav-links { gap: 1.2rem; justify-content: center; }
-            .nav-links a { font-size: 0.9rem; }
-            .hero h1 { font-size: 2.5rem; }
-            section { padding: 60px 0; }
-            h2 { font-size: 2rem; }
-            .contact-flex { flex-direction: column; }
-            .roadmap-card { flex-direction: column; align-items: flex-start; }
-            .roadmap-date { min-width: auto; }
-            .support-options { flex-direction: column; align-items: center; }
+        [id] {
+            scroll-margin-top: 90px;
         }
 
+        /* === СЕНСОРНЫЕ ЭКРАНЫ === */
+        @media (pointer: coarse) {
+            .cursor-dot, .cursor-ring { display: none; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .project-link-overlay {
+                opacity: 1;
+                background: linear-gradient(to top, rgba(3, 6, 3, 0.6), rgba(3, 6, 3, 0.12) 60%);
+                backdrop-filter: none;
+            }
+            .secret-box { transform: none; }
+            .project-item { transform: none !important; }
+        }
+
+        /* === ПЛАНШЕТЫ === */
+        @media (max-width: 900px) {
+            h2 { font-size: 2.2rem; }
+            .section-sub { font-size: 1.1rem; }
+        }
+
+        /* === МОБИЛЬНЫЕ / МАЛЕНЬКИЕ ПЛАНШЕТЫ === */
+        @media (max-width: 780px) {
+            header { padding: 12px 0; }
+            .navbar { flex-direction: column; align-items: stretch; gap: 10px; }
+            .logo-wrapper { justify-content: center; }
+            .logo-image { height: 32px; }
+            .logo { font-size: 1.5rem; }
+            .nav-links { gap: 6px; justify-content: center; flex-wrap: wrap; }
+            .nav-links a {
+                font-size: 0.95rem;
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+                padding: 8px 14px;
+                border-radius: 12px;
+            }
+            .nav-links a:active { background: rgba(78, 139, 59, 0.15); }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            section { padding: 60px 0; }
+            h2 { font-size: 2rem; }
+            .section-sub { margin-bottom: 2.2rem; }
+            .btn { padding: 14px 26px; }
+            .project-img { height: 200px; }
+            .contact-flex { flex-direction: column; padding: 1.8rem; border-radius: 32px; }
+            .roadmap-card { flex-direction: column; align-items: flex-start; padding: 1.1rem 1.4rem; }
+            .roadmap-date { min-width: auto; }
+            .support-options { flex-direction: column; align-items: center; }
+            .support-option { width: 100%; max-width: 320px; }
+            .support-card { border-radius: 32px; padding: 1.8rem; }
+            .faq-item { padding: 1rem 1.3rem; border-radius: 24px; }
+            input, textarea, button[type="submit"] { min-height: 48px; }
+        }
+
+        /* === СМАРТФОНЫ === */
+        @media (max-width: 640px) {
+            .container { padding: 0 16px; }
+            .hero { min-height: 80vh; }
+            .hero h1 { font-size: 2rem; line-height: 1.25; }
+            .hero p { font-size: 1.02rem; }
+            .hero-buttons { flex-direction: column; }
+            .hero-buttons .btn { width: 100%; text-align: center; padding: 16px 20px; }
+            section { padding: 48px 0; }
+            h2 { font-size: 1.65rem; }
+            .section-sub { font-size: 1rem; margin-bottom: 1.8rem; }
+            .features-grid { gap: 1.2rem; }
+            .feature-card { padding: 1.6rem 1.2rem; border-radius: 24px; }
+            .projects-grid { gap: 1.2rem; }
+            .project-item { border-radius: 24px; }
+            .project-img { height: 180px; }
+            .project-info { padding: 1.2rem; }
+            .project-info h3 { font-size: 1.3rem; }
+            .secret-text { font-size: 0.85rem; }
+            .team-grid { gap: 1rem; }
+            .team-card {
+                width: calc(50% - 0.5rem);
+                padding: 1.2rem 0.8rem;
+                border-radius: 24px;
+            }
+            .team-avatar { width: 84px; height: 84px; }
+            .team-avatar i { font-size: 2.6rem; }
+            .team-card h4 { font-size: 1.05rem; }
+            .roadmap-icon { width: 40px; font-size: 1.6rem; }
+            .contact-flex { gap: 2rem; }
+            .social-links a { font-size: 1.5rem; margin-right: 1rem; }
+            footer { padding: 1.5rem 1rem; }
+        }
+
+        /* === ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (≤375px) === */
         @media (max-width: 480px) {
             .logo-image { height: 28px; }
-            .logo { font-size: 1.2rem; }
-            .nav-links { gap: 0.8rem; }
-            .nav-links a { font-size: 0.8rem; }
+            .logo { font-size: 1.25rem; }
+            .nav-links a { font-size: 0.85rem; padding: 8px 10px; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero-buttons .btn { font-size: 0.95rem; }
+            h2 { font-size: 1.5rem; }
+            .section-sub { font-size: 0.95rem; }
+            .project-badge { font-size: 0.6rem; padding: 3px 10px; }
         }
     </style>
 </head>
@@ -1199,7 +1281,7 @@
 <header>
     <div class="container navbar">
         <div class="logo-wrapper">
-            <img src="L.png" alt="LUNCLIN Studio" class="logo-image">
+            <img src="L.webp" alt="LUNCLIN Studio" class="logo-image" onerror="this.onerror=null; this.src='L.png';">
             <div class="logo">LUN<span>CLIN</span></div>
         </div>
         <div class="nav-links">
@@ -1264,7 +1346,7 @@
 
                 <div class="project-item fade-up">
                     <div class="project-img">
-                        <img src="UP.jpg" alt="UP!" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <img src="UP.webp" alt="UP!" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
                         <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
                             <div class="secret-box">
@@ -1286,7 +1368,7 @@
 
                 <div class="project-item fade-up">
                     <div class="project-img">
-                        <img src="FrostvaleRP.jpg" alt="Frostvale Role Play" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <img src="FrostvaleRP.webp" alt="Frostvale Role Play" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
                         <a href="https://www.roblox.com/share?code=a63b220bb76d7d40b744446382b72591&type=ExperienceDetails&stamp=1785743805280" target="_blank" class="project-link-overlay">
                             <div class="secret-box">
@@ -1308,7 +1390,7 @@
 
                 <div class="project-item fade-up">
                     <div class="project-img">
-                        <img src="The Church of Silence.jpg" alt="The Church of Silence" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <img src="The Church of Silence.webp" alt="The Church of Silence" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-church"></i></div>
                         <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
                             <div class="secret-box">
@@ -1330,7 +1412,7 @@
 
                 <div class="project-item fade-up">
                     <div class="project-img">
-                        <img src="Recognize The Traitor.jpg" alt="Recognize The Traitor" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <img src="Recognize The Traitor.webp" alt="Recognize The Traitor" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                         <div class="placeholder-icon" style="display:none;"><i class="fas fa-user-secret"></i></div>
                         <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
                             <div class="secret-box">
@@ -1423,7 +1505,7 @@
 
                 <div class="team-card fade-up">
                     <div class="team-avatar">
-                        <img src="Keypht.jpg" alt="Keypht" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-dragon\'></i>'">
+                        <img src="Keypht.webp" alt="Keypht" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-dragon\'></i>'">
                     </div>
                     <h4>Keypht</h4>
                     <p>Геймдизайнер & Программист</p>
@@ -1431,7 +1513,7 @@
 
                 <div class="team-card fade-up">
                     <div class="team-avatar">
-                        <img src="Taburetka.jpg" alt="Taburetka" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-gamepad\'></i>'">
+                        <img src="Taburetka.webp" alt="Taburetka" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-gamepad\'></i>'">
                     </div>
                     <h4>Taburetka</h4>
                     <p>Геймплей разработчик</p>
@@ -1439,7 +1521,7 @@
 
                 <div class="team-card fade-up">
                     <div class="team-avatar">
-                        <img src="CrazyKreeke66.jpg" alt="CrazyKreeke66" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-palette\'></i>'">
+                        <img src="CrazyKreeke66.webp" alt="CrazyKreeke66" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-palette\'></i>'">
                     </div>
                     <h4>CrazyKreeke66</h4>
                     <p>Арт-Дизайнер</p>
