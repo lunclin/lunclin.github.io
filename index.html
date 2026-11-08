@@ -1,1285 +1,241 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>LUNCLIN Studio</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary: #4e8b3b;
-            --primary-dark: #3a692b;
-            --primary-light: #6dab56;
-            --primary-glow: rgba(78, 139, 59, 0.4);
-            --ember: #ffb45e;
-            --ember-soft: #ffcf8a;
-            --ember-glow: rgba(255, 180, 94, 0.35);
-            --bg-dark: #0b1309;
-            --card-bg: #171f14;
-            --text-light: #f0f7ea;
-            --border-color: #2a3623;
-            --transition-smooth: cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) #0a1a05;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
-
-        ::selection {
-            background: rgba(78, 139, 59, 0.4);
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 40%, #142010, #030603);
-            z-index: -2;
-        }
-
-        /* === ФОНОВЫЕ СЛОИ: светлячки + туман + декор === */
-        .bg-wrap {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .deco-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--primary-glow);
-            filter: blur(60px);
-            opacity: 0.3;
-            will-change: transform;
-        }
-
-        .deco-1 { width: 300px; height: 300px; top: 10%; left: -100px; }
-        .deco-2 { width: 400px; height: 400px; bottom: 0; right: -150px; }
-
-        .fog {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-        }
-
-        .fog-layer {
-            position: absolute;
-            left: -30%;
-            width: 160%;
-            height: 55vh;
-            filter: blur(60px);
-            will-change: transform;
-            animation: fogDrift var(--fog-dur, 30s) ease-in-out infinite alternate;
-        }
-
-        .fog-1 {
-            top: 6%;
-            opacity: 0.32;
-            background: radial-gradient(ellipse at center, rgba(90, 140, 70, 0.5), rgba(20, 40, 15, 0.25) 60%, transparent 75%);
-            --fog-dur: 26s;
-            animation-delay: -12s;
-        }
-
-        .fog-2 {
-            bottom: 0;
-            opacity: 0.24;
-            background: radial-gradient(ellipse at center, rgba(150, 100, 55, 0.4), transparent 70%);
-            --fog-dur: 36s;
-            animation-delay: -20s;
-        }
-
-        .fog-3 {
-            top: 42%;
-            opacity: 0.18;
-            background: radial-gradient(ellipse at center, rgba(80, 120, 90, 0.35), transparent 70%);
-            --fog-dur: 44s;
-            animation-delay: -30s;
-        }
-
-        @keyframes fogDrift {
-            from { transform: translateX(-8%) scale(1); }
-            to { transform: translateX(8%) scale(1.18); }
-        }
-
-        .fireflies {
-            position: absolute;
-            inset: 0;
-        }
-
-        .firefly {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ffe9a8 0%, #ffcf6b 40%, rgba(255, 190, 90, 0) 70%);
-            box-shadow: 0 0 6px 2px rgba(255, 205, 130, 0.45), 0 0 18px 6px rgba(255, 170, 80, 0.16);
-            animation: fly var(--fly-dur, 20s) linear infinite, flicker var(--flick-dur, 2s) ease-in-out infinite;
-        }
-
-        .firefly-green {
-            background: radial-gradient(circle, #d9f7c0 0%, #9fd97e 40%, rgba(140, 220, 120, 0) 70%);
-            box-shadow: 0 0 6px 2px rgba(160, 220, 130, 0.4), 0 0 18px 6px rgba(120, 200, 100, 0.14);
-        }
-
-        @keyframes fly {
-            0%   { transform: translate(0, 0) scale(1); opacity: 0; }
-            10%  { opacity: 1; }
-            25%  { transform: translate(var(--fx1, 20px), -18vh) scale(0.92); }
-            50%  { transform: translate(var(--fx2, -30px), -42vh) scale(1.06); }
-            75%  { transform: translate(var(--fx3, 15px), -64vh) scale(0.95); }
-            90%  { opacity: 1; }
-            100% { transform: translate(0, -85vh) scale(1); opacity: 0; }
-        }
-
-        @keyframes flicker {
-            0%, 100% { opacity: 0.12; }
-            20% { opacity: 0.95; }
-            40% { opacity: 0.3; }
-            60% { opacity: 0.8; }
-            80% { opacity: 0.25; }
-        }
-
-        /* === ПЛЁНОЧНЫЙ ЭФФЕКТ: зерно + виньетка === */
-        .film-grain {
-            position: fixed;
-            top: -50px;
-            left: -50px;
-            width: calc(100% + 100px);
-            height: calc(100% + 100px);
-            pointer-events: none;
-            z-index: 9001;
-            opacity: 0.05;
-            mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            animation: grainShift 0.9s steps(6) infinite;
-        }
-
-        @keyframes grainShift {
-            0%   { transform: translate(0, 0); }
-            20%  { transform: translate(-12px, 8px); }
-            40%  { transform: translate(8px, -12px); }
-            60%  { transform: translate(-8px, -8px); }
-            80%  { transform: translate(12px, 12px); }
-            100% { transform: translate(0, 0); }
-        }
-
-        .vignette {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 9000;
-            background: radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(2, 5, 2, 0.4) 100%);
-        }
-
-        /* === КАСТОМНЫЙ КУРСОР === */
-        @media (pointer: fine) {
-            body, a, button, input, textarea { cursor: none; }
-        }
-
-        .cursor-dot, .cursor-ring {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            border-radius: 50%;
-            z-index: 10002;
-        }
-
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: #fff;
-            box-shadow: 0 0 8px rgba(255, 220, 160, 0.6);
-        }
-
-        .cursor-ring {
-            width: 36px;
-            height: 36px;
-            border: 1.5px solid rgba(255, 220, 160, 0.55);
-            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-        }
-
-        .cursor-ring.is-hover {
-            width: 58px;
-            height: 58px;
-            border-color: var(--ember);
-            background: rgba(255, 180, 94, 0.08);
-        }
-
-        .cursor-ring.is-down {
-            border-color: var(--primary-light);
-            background: rgba(78, 139, 59, 0.12);
-        }
-
-        /* === ТОСТ-ПАСХАЛКА === */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translate(-50%, 20px);
-            opacity: 0;
-            background: rgba(23, 31, 20, 0.95);
-            border: 1px solid rgba(255, 180, 94, 0.5);
-            color: #ffe3bd;
-            padding: 12px 20px;
-            border-radius: 40px;
-            z-index: 10001;
-            transition: opacity 0.4s ease, transform 0.4s var(--transition-smooth);
-            pointer-events: none;
-            box-shadow: 0 0 25px rgba(255, 180, 94, 0.15);
-            font-size: 0.9rem;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translate(-50%, 0);
-        }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        section {
-            padding: 100px 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-        }
-
-        h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 1.2rem;
-            position: relative;
-            display: inline-block;
-            background: linear-gradient(120deg, #fff, var(--primary-light));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.02em;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 0;
-            width: 70px;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 4px;
-            transition: width 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        h2:hover::after {
-            width: 120px;
-            box-shadow: 0 0 12px var(--ember-glow), 0 0 4px var(--ember-glow);
-        }
-
-        .section-sub {
-            font-size: 1.2rem;
-            color: #cadfc0;
-            margin-bottom: 3rem;
-            max-width: 650px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            font-weight: 600;
-            border-radius: 40px;
-            transition: all 0.3s var(--transition-smooth);
-            cursor: pointer;
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: left 0.4s ease;
-            z-index: -1;
-        }
-
-        .btn:hover::before { left: 0; }
-
-        .btn-primary {
-            background: var(--primary);
-            border: 2px solid var(--primary);
-            color: #0f1a0c;
-            box-shadow: 0 4px 15px rgba(78, 139, 59, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-4px);
-        }
-
-        .btn-outline {
-            border: 2px solid var(--primary);
-            color: var(--text-light);
-        }
-
-        .btn-outline:hover {
-            background: rgba(78, 139, 59, 0.15);
-            transform: translateY(-3px);
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            backdrop-filter: blur(12px);
-            background: rgba(15, 25, 12, 0.8);
-            border-bottom: 1px solid rgba(78, 139, 59, 0.3);
-            padding: 18px 0;
-            z-index: 100;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .logo-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .logo-image {
-            height: 40px;
-            width: auto;
-            display: block;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .logo-image:hover {
-            animation: glitch 0.45s steps(2) 1;
-        }
-
-        @keyframes glitch {
-            0%   { transform: translate(0, 0); filter: none; }
-            20%  { transform: translate(-2px, 1px) skewX(-4deg); filter: hue-rotate(40deg); }
-            40%  { transform: translate(2px, -1px); filter: hue-rotate(-30deg) brightness(1.3); }
-            60%  { transform: translate(-1px, -1px) skewX(3deg); filter: hue-rotate(20deg) saturate(1.4); }
-            100% { transform: translate(0, 0); filter: none; }
-        }
-
-        .logo {
-            font-size: 1.9rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .logo span {
-            color: var(--primary);
-            text-shadow: 0 0 5px var(--primary-glow);
-            animation: glowPulse 3.5s ease-in-out infinite;
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { text-shadow: 0 0 5px var(--primary-glow); }
-            50% { text-shadow: 0 0 14px var(--primary-glow), 0 0 4px rgba(255, 180, 94, 0.25); }
-        }
-
-        .logo-icon {
-            font-size: 2rem;
-            color: var(--primary);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-light);
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.25s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-light);
-        }
-
-        /* === ГЛАВНЫЙ ЭКРАН === */
-        .hero {
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-content {
-            max-width: 680px;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            line-height: 1.2;
-            margin-bottom: 1.2rem;
-            font-weight: 800;
-        }
-
-        .hero .word {
-            display: inline-block;
-            opacity: 0;
-            animation: wordIn 0.9s var(--transition-smooth) forwards;
-        }
-
-        .hero .word.accent {
-            color: var(--primary);
-            animation-name: wordInGlow;
-        }
-
-        @keyframes wordIn {
-            0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-
-        @keyframes wordInGlow {
-            0% { opacity: 0; transform: translateY(24px); filter: blur(10px); text-shadow: 0 0 0 rgba(78, 139, 59, 0); }
-            60% { text-shadow: 0 0 22px var(--primary-glow), 0 0 6px var(--primary-glow); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); text-shadow: 0 0 12px var(--primary-glow); }
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2.5rem;
-            color: #cde5c2;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        /* === СЕКЦИИ === */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .feature-card {
-            background: rgba(23, 31, 20, 0.7);
-            backdrop-filter: blur(2px);
-            padding: 2rem 1.5rem;
-            border-radius: 32px;
-            border: 1px solid var(--border-color);
-            transition: all 0.4s var(--transition-smooth);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 180, 94, 0.45);
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 180, 94, 0.07);
-        }
-
-        .feature-icon {
-            font-size: 2.8rem;
-            color: var(--primary);
-            margin-bottom: 1.2rem;
-            display: inline-block;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
-        }
-
-        .feature-card:hover .feature-icon {
-            color: var(--ember);
-            text-shadow: 0 0 16px var(--ember-glow);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            perspective: 1200px;
-        }
-
-        .project-item {
-            background: rgba(18, 27, 14, 0.75);
-            backdrop-filter: blur(4px);
-            border-radius: 32px;
-            overflow: hidden;
-            border: 1px solid rgba(78, 139, 59, 0.3);
-            transition: transform 0.15s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
-            position: relative;
-            box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            will-change: transform;
-        }
-
-        .project-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--ember), transparent);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s ease;
-            z-index: 2;
-        }
-
-        .project-item:hover::before {
-            transform: scaleX(1);
-        }
-
-        .project-item:hover {
-            border-color: rgba(255, 190, 110, 0.55);
-            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 180, 94, 0.18), 0 0 30px rgba(255, 180, 94, 0.08);
-        }
-
-        .project-img {
-            height: 220px;
-            background: linear-gradient(135deg, #1f2e1a, #0e170c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .project-img::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 55%, rgba(2, 6, 2, 0.45) 100%);
-            pointer-events: none;
-        }
-
-        .project-img img {
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-            border-radius: 18px;
-            transition: transform 0.4s ease, filter 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            will-change: transform;
-        }
-
-        .project-item:hover .project-img img {
-            filter: brightness(1.08) contrast(1.03);
-        }
-
-        .placeholder-icon {
-            font-size: 4rem;
-            color: rgba(78, 139, 59, 0.3);
-            transition: all 0.4s ease;
-        }
-
-        .project-item:hover .placeholder-icon {
-            transform: scale(1.2);
-            color: rgba(78, 139, 59, 0.6);
-        }
-
-        /* Секретный тизер поверх карточки */
-        .project-link-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            background: radial-gradient(ellipse at center, rgba(10, 18, 8, 0.35), rgba(3, 6, 3, 0.82));
-            backdrop-filter: blur(3px);
-            cursor: pointer;
-            text-decoration: none;
-            z-index: 1;
-        }
-
-        .project-item:hover .project-link-overlay {
-            opacity: 1;
-        }
-
-        .secret-box {
-            text-align: center;
-            padding: 0 24px;
-            transform: translateY(14px);
-            transition: transform 0.4s var(--transition-smooth);
-        }
-
-        .project-item:hover .secret-box {
-            transform: translateY(0);
-        }
-
-        .secret-icon {
-            font-size: 1.6rem;
-            color: var(--ember);
-            margin-bottom: 0.6rem;
-            filter: drop-shadow(0 0 8px var(--ember-glow));
-        }
-
-        .secret-text {
-            color: #fff;
-            font-size: 0.95rem;
-            font-style: italic;
-            line-height: 1.4;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-        }
-
-        .secret-hint {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 0.8rem;
-            padding: 4px 14px;
-            border-radius: 30px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #cdd9c4;
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .project-info {
-            padding: 1.6rem;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
-            align-items: center;
-        }
-
-        .project-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 12px;
-            border-radius: 40px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-            height: 24px;
-            line-height: 1;
-        }
-
-        .project-badge.status {
-            background: rgba(78, 139, 59, 0.2);
-            color: var(--primary-light);
-            border: 1px solid rgba(78, 139, 59, 0.3);
-        }
-
-        .project-badge.platform {
-            background: rgba(255, 255, 255, 0.06);
-            color: #a0b895;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .project-item:hover .project-badge.status {
-            background: rgba(78, 139, 59, 0.4);
-            border-color: var(--primary);
-            color: #e0f5d8;
-        }
-
-        .project-item:hover .project-badge.platform {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.2);
-            color: #d4ecd0;
-        }
-
-        .project-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.4rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #fff, #d4ecd0);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .project-info p {
-            color: #cde5c2;
-            line-height: 1.5;
-            font-size: 0.92rem;
-            margin: 0;
-            flex: 1;
-        }
-
-        .roadmap-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .roadmap-card {
-            background: rgba(23, 31, 20, 0.7);
-            backdrop-filter: blur(2px);
-            border-radius: 24px;
-            padding: 1.2rem 1.8rem;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            transition: all 0.3s;
-            border: 1px solid var(--border-color);
-        }
-
-        .roadmap-card:hover {
-            transform: translateX(8px);
-            border-color: rgba(255, 180, 94, 0.45);
-            background: rgba(30, 40, 24, 0.8);
-        }
-
-        .roadmap-icon {
-            font-size: 2rem;
-            color: var(--primary);
-            width: 50px;
-            text-align: center;
-            transition: color 0.3s ease;
-        }
-
-        .roadmap-card:hover .roadmap-icon {
-            color: var(--ember);
-        }
-
-        .roadmap-date {
-            min-width: 130px;
-            font-weight: 700;
-            color: var(--primary-light);
-            font-size: 1.1rem;
-        }
-
-        .roadmap-text {
-            flex: 1;
-            color: #cde5c2;
-        }
-
-        .support-card {
-            background: linear-gradient(135deg, rgba(78, 139, 59, 0.15), rgba(0, 0, 0, 0.4));
-            border-radius: 48px;
-            padding: 2.5rem;
-            text-align: center;
-            border: 1px solid rgba(255, 180, 94, 0.45);
-            box-shadow: 0 0 20px rgba(255, 180, 94, 0.15);
-            transition: 0.3s;
-        }
-
-        .support-card:hover {
-            transform: scale(1.01);
-            box-shadow: 0 0 30px rgba(255, 180, 94, 0.3);
-        }
-
-        .support-heart {
-            font-size: 3rem;
-            color: #ff7b89;
-            margin-bottom: 1rem;
-            display: inline-block;
-            animation: heartbeat 1.8s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.18); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.14); }
-        }
-
-        .support-options {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin: 2rem 0;
-        }
-
-        .support-option {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 1.5rem;
-            padding: 1rem 1.5rem;
-            min-width: 160px;
-            border: 1px solid var(--border-color);
-        }
-
-        .support-option i {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        .btn-boosty {
-            background: #ffaa33;
-            color: #1f2c00;
-            border: 2px solid #ffaa33;
-            box-shadow: 0 4px 15px rgba(255, 170, 51, 0.25);
-            animation: breath 2.8s ease-in-out infinite;
-        }
-
-        .btn-boosty:hover {
-            background: #ff9c14;
-            transform: translateY(-4px);
-        }
-
-        @keyframes breath {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 170, 51, 0.35), 0 4px 15px rgba(255, 170, 51, 0.25); }
-            50% { box-shadow: 0 0 0 14px rgba(255, 170, 51, 0), 0 4px 24px rgba(255, 170, 51, 0.45); }
-        }
-
-        .faq-grid {
-            display: grid;
-            gap: 1rem;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .faq-item {
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(6px);
-            border-radius: 30px;
-            padding: 1.2rem 1.8rem;
-            border-left: 5px solid var(--primary);
-            transition: border-color 0.3s ease, background 0.3s ease;
-        }
-
-        .faq-item:hover {
-            border-left-color: var(--ember);
-            background: rgba(6, 12, 5, 0.55);
-        }
-
-        .faq-question {
-            font-weight: 700;
-            color: var(--primary-light);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .team-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-        }
-
-        .team-card {
-            background: var(--card-bg);
-            border-radius: 32px;
-            padding: 1.8rem;
-            text-align: center;
-            width: 220px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .team-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255, 180, 94, 0.4);
-            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 180, 94, 0.06);
-        }
-
-        .team-avatar {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 1rem;
-            border-radius: 50%;
-            overflow: hidden;
-            background: #1e2a18;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .team-avatar i {
-            font-size: 3.5rem;
-            color: var(--primary);
-        }
-
-        .team-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-            display: block;
-        }
-
-        .team-card:hover .team-avatar {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 180, 94, 0.2);
-        }
-
-        .team-card:hover .team-avatar img {
-            transform: scale(1.1);
-        }
-
-        .team-card h4 {
-            font-size: 1.2rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .team-card p {
-            color: #a0b895;
-            font-size: 0.85rem;
-        }
-
-        .team-card .vacancy-badge {
-            display: inline-block;
-            background: rgba(255, 170, 51, 0.2);
-            color: #ffaa33;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-            border: 1px solid rgba(255, 170, 51, 0.3);
-        }
-
-        .contact-flex {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3rem;
-            background: rgba(23, 31, 20, 0.8);
-            backdrop-filter: blur(4px);
-            border-radius: 48px;
-            padding: 2.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .contact-info {
-            flex: 1;
-        }
-
-        .contact-form {
-            flex: 1;
-            min-width: 260px;
-        }
-
-        .contact-details p {
-            margin: 1rem 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .contact-details i {
-            width: 32px;
-            color: var(--primary);
-            font-size: 1.3rem;
-        }
-
-        .social-links a {
-            color: #cce6c0;
-            font-size: 1.8rem;
-            margin-right: 1.5rem;
-            display: inline-block;
-            transition: 0.2s;
-        }
-
-        .social-links a:hover {
-            color: var(--ember);
-            transform: translateY(-4px);
-        }
-
-        input, textarea {
-            width: 100%;
-            background: #1c2716;
-            border: 1px solid #36452c;
-            padding: 14px 18px;
-            border-radius: 28px;
-            color: white;
-            font-size: 1rem;
-            transition: 0.2s;
-        }
-
-        input:focus, textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(78, 139, 59, 0.2);
-        }
-
-        button[type="submit"] {
-            background: var(--primary);
-            border: none;
-            width: 100%;
-            padding: 14px;
-            font-weight: bold;
-            border-radius: 40px;
-            color: #0e170b;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button[type="submit"]:hover {
-            background: var(--primary-dark);
-            color: white;
-            transform: scale(1.02);
-        }
-
-        .fade-up {
-            opacity: 0;
-            transform: translateY(40px);
-            filter: blur(6px);
-            transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth), filter 0.8s var(--transition-smooth);
-        }
-
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
-
-        .features-grid > .fade-up:nth-child(2) { transition-delay: 0.1s; }
-        .features-grid > .fade-up:nth-child(3) { transition-delay: 0.2s; }
-        .features-grid > .fade-up:nth-child(4) { transition-delay: 0.3s; }
-        .projects-grid > .fade-up:nth-child(2) { transition-delay: 0.1s; }
-        .projects-grid > .fade-up:nth-child(3) { transition-delay: 0.2s; }
-        .projects-grid > .fade-up:nth-child(4) { transition-delay: 0.3s; }
-        .team-grid > .fade-up:nth-child(2) { transition-delay: 0.08s; }
-        .team-grid > .fade-up:nth-child(3) { transition-delay: 0.16s; }
-        .team-grid > .fade-up:nth-child(4) { transition-delay: 0.24s; }
-        .team-grid > .fade-up:nth-child(5) { transition-delay: 0.32s; }
-
-        footer {
-            background: #081205;
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid #2a3a1f;
-            font-size: 0.85rem;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a1a05;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 10px;
-            transition: all 0.2s ease;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-        }
-
-        /* === ДОСТУПНОСТЬ: отключаем анимации по запросу === */
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+    <title>LUNCLIN Studio — инди-игры из Нижнего Новгорода</title>
+    <meta name="description" content="LUNCLIN Studio — независимая инди-студия из Нижнего Новгорода. Атмосферные игры для Roblox и первый проект на Unity.">
+    <meta name="author" content="LUNCLIN Studio">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1309">
+    <meta name="color-scheme" content="dark">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="https://lunclin.github.io/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="LUNCLIN Studio">
+    <meta property="og:url" content="https://lunclin.github.io/">
+    <meta property="og:title" content="LUNCLIN Studio — инди-игры из Нижнего Новгорода">
+    <meta property="og:description" content="Атмосферные игры для Roblox и первый проект на Unity. Знакомьтесь с проектами и командой LUNCLIN.">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:image" content="https://lunclin.github.io/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="LUNCLIN Studio — делаем игры, которые хочется проходить">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LUNCLIN Studio — инди-игры из Нижнего Новгорода">
+    <meta name="twitter:description" content="Атмосферные игры для Roblox и первый проект на Unity.">
+    <meta name="twitter:image" content="https://lunclin.github.io/og-image.jpg">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        document.documentElement.classList.remove("no-js");
+        document.documentElement.classList.add("js");
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://lunclin.github.io/#organization",
+                "url": "https://lunclin.github.io/",
+                "logo": "https://lunclin.github.io/icon-512.png",
+                "name": "LUNCLIN Studio",
+                "description": "Независимая инди-студия из Нижнего Новгорода. Создаём атмосферные игры для Roblox и готовим первый проект на Unity.",
+                "email": "lunclin.studio@gmail.com",
+                "sameAs": [
+                    "https://t.me/lunclin",
+                    "https://www.roblox.com/communities/35756576/LUNCLIN-Indie-Studio"
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://lunclin.github.io/#website",
+                "url": "https://lunclin.github.io/",
+                "name": "LUNCLIN Studio",
+                "inLanguage": "ru",
+                "publisher": {
+                    "@id": "#organization"
+                }
+            },
+            {
+                "@type": "VideoGame",
+                "name": "Frostvale Role Play",
+                "description": "Ролевая игра с открытым миром и атмосферой 00-х в Roblox.",
+                "genre": "Role-playing game",
+                "gamePlatform": "Roblox",
+                "applicationCategory": "Game",
+                "operatingSystem": "Web",
+                "inLanguage": "ru",
+                "publisher": {
+                    "@id": "#organization"
+                }
+            },
+            {
+                "@type": "VideoGame",
+                "name": "UP!",
+                "description": "Аркадный only-up паркур в стиле low-poly.",
+                "genre": "Parkour",
+                "gamePlatform": "Unity",
+                "applicationCategory": "Game",
+                "operatingSystem": "Windows",
+                "publisher": {
+                    "@id": "#organization"
+                }
+            },
+            {
+                "@type": "VideoGame",
+                "name": "Market",
+                "description": "Аркадная игра о магазине, который нужно защитить от местных воришек.",
+                "genre": "Arcade",
+                "gamePlatform": "Unity",
+                "applicationCategory": "Game",
+                "operatingSystem": "Windows",
+                "publisher": {
+                    "@id": "#organization"
+                }
+            },
+            {
+                "@type": "VideoGame",
+                "name": "The Church of Silence",
+                "description": "Survival horror о подозрительной церкви и тишине, которая скрывает больше, чем кажется.",
+                "genre": "Survival horror",
+                "gamePlatform": "Roblox",
+                "applicationCategory": "Game",
+                "operatingSystem": "Web",
+                "inLanguage": "ru",
+                "publisher": {
+                    "@id": "#organization"
+                }
+            },
+            {
+                "@type": "VideoGame",
+                "name": "Recognize The Traitor",
+                "description": "Социальная игра на вычисление убийцы по поведению среди одинаковых игроков.",
+                "genre": "Social deduction",
+                "gamePlatform": "Roblox",
+                "applicationCategory": "Game",
+                "operatingSystem": "Web",
+                "inLanguage": "ru",
+                "publisher": {
+                    "@id": "#organization"
+                }
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "Будут ли игры не только в Roblox?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Да. Сейчас студия работает над первым проектом на Unity; в планах — релиз в Steam."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Когда выйдет Frostvale RP?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Игра уже доступна в Roblox в открытой альфе и продолжает обновляться."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Как помочь студии, кроме денег?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Рассказать друзьям, прислать фидбек в Telegram и протестировать новые механики."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Как попасть в команду?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Напиши на lunclin.studio@gmail.com или в Telegram и приложи примеры работ."
+                        }
+                    }
+                ]
             }
-            .fade-up, .hero .word { opacity: 1 !important; transform: none !important; filter: none !important; }
-        }
-
-        [id] {
-            scroll-margin-top: 90px;
-        }
-
-        /* === СЕНСОРНЫЕ ЭКРАНЫ === */
-        @media (pointer: coarse) {
-            .cursor-dot, .cursor-ring { display: none; }
-        }
-
-        @media (hover: none) and (pointer: coarse) {
-            .project-link-overlay {
-                opacity: 1;
-                background: linear-gradient(to top, rgba(3, 6, 3, 0.6), rgba(3, 6, 3, 0.12) 60%);
-                backdrop-filter: none;
-            }
-            .secret-box { transform: none; }
-            .project-item { transform: none !important; }
-        }
-
-        /* === ПЛАНШЕТЫ === */
-        @media (max-width: 900px) {
-            h2 { font-size: 2.2rem; }
-            .section-sub { font-size: 1.1rem; }
-        }
-
-        /* === МОБИЛЬНЫЕ / МАЛЕНЬКИЕ ПЛАНШЕТЫ === */
-        @media (max-width: 780px) {
-            header { padding: 12px 0; }
-            .navbar { flex-direction: column; align-items: stretch; gap: 10px; }
-            .logo-wrapper { justify-content: center; }
-            .logo-image { height: 32px; }
-            .logo { font-size: 1.5rem; }
-            .nav-links { gap: 6px; justify-content: center; flex-wrap: wrap; }
-            .nav-links a {
-                font-size: 0.95rem;
-                min-height: 44px;
-                display: inline-flex;
-                align-items: center;
-                padding: 8px 14px;
-                border-radius: 12px;
-            }
-            .nav-links a:active { background: rgba(78, 139, 59, 0.15); }
-            .hero h1 { font-size: 2.5rem; }
-            .hero p { font-size: 1.1rem; }
-            section { padding: 60px 0; }
-            h2 { font-size: 2rem; }
-            .section-sub { margin-bottom: 2.2rem; }
-            .btn { padding: 14px 26px; }
-            .project-img { height: 200px; }
-            .contact-flex { flex-direction: column; padding: 1.8rem; border-radius: 32px; }
-            .roadmap-card { flex-direction: column; align-items: flex-start; padding: 1.1rem 1.4rem; }
-            .roadmap-date { min-width: auto; }
-            .support-options { flex-direction: column; align-items: center; }
-            .support-option { width: 100%; max-width: 320px; }
-            .support-card { border-radius: 32px; padding: 1.8rem; }
-            .faq-item { padding: 1rem 1.3rem; border-radius: 24px; }
-            input, textarea, button[type="submit"] { min-height: 48px; }
-            .fog-layer { filter: blur(30px); }
-            .fog-2, .fog-3 { opacity: 0.12; }
-            .deco-circle { filter: blur(40px); }
-            .film-grain { animation: none; }
-        }
-
-        /* === СМАРТФОНЫ === */
-        @media (max-width: 640px) {
-            .container { padding: 0 16px; }
-            .hero { min-height: 80vh; }
-            .hero h1 { font-size: 2rem; line-height: 1.25; }
-            .hero p { font-size: 1.02rem; }
-            .hero-buttons { flex-direction: column; }
-            .hero-buttons .btn { width: 100%; text-align: center; padding: 16px 20px; }
-            section { padding: 48px 0; }
-            h2 { font-size: 1.65rem; }
-            .section-sub { font-size: 1rem; margin-bottom: 1.8rem; }
-            .features-grid { gap: 1.2rem; }
-            .feature-card { padding: 1.6rem 1.2rem; border-radius: 24px; }
-            .projects-grid { gap: 1.2rem; }
-            .project-item { border-radius: 24px; }
-            .project-img { height: 180px; }
-            .project-info { padding: 1.2rem; }
-            .project-info h3 { font-size: 1.3rem; }
-            .secret-text { font-size: 0.85rem; }
-            .team-grid { gap: 1rem; }
-            .team-card {
-                width: calc(50% - 0.5rem);
-                padding: 1.2rem 0.8rem;
-                border-radius: 24px;
-            }
-            .team-avatar { width: 84px; height: 84px; }
-            .team-avatar i { font-size: 2.6rem; }
-            .team-card h4 { font-size: 1.05rem; }
-            .roadmap-icon { width: 40px; font-size: 1.6rem; }
-            .contact-flex { gap: 2rem; }
-            .social-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-            .social-links a {
-                font-size: 1.4rem;
-                width: 44px;
-                height: 44px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 0;
-                border-radius: 14px;
-                background: rgba(255, 255, 255, 0.04);
-                border: 1px solid rgba(255, 255, 255, 0.06);
-            }
-            .social-links a:hover { transform: translateY(-3px); }
-            footer { padding: 1.5rem 1rem; }
-        }
-
-        /* === ОЧЕНЬ МАЛЕНЬКИЕ ЭКРАНЫ (≤375px) === */
-        @media (max-width: 480px) {
-            .logo-image { height: 28px; }
-            .logo { font-size: 1.25rem; }
-            .nav-links a { font-size: 0.85rem; padding: 8px 10px; }
-            .hero h1 { font-size: 1.8rem; }
-            .hero-buttons .btn { font-size: 0.95rem; }
-            h2 { font-size: 1.5rem; }
-            .section-sub { font-size: 1rem; }
-            .project-badge { font-size: 0.6rem; padding: 3px 10px; }
-        }
-    </style>
+        ]
+    }
+    </script>
 </head>
-<body>
+<body id="top">
 
-<div class="bg-wrap" id="bgWrap">
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<svg class="svg-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-car" viewBox="0 0 24 24">
+        <path d="M5 16h14M7 16l1.4-5.2A2 2 0 0 1 10.3 9h3.4a2 2 0 0 1 1.9 1.8L17 16"/>
+        <path d="M6 16v2M18 16v2"/>
+        <circle cx="7.5" cy="16" r="1.2"/>
+        <circle cx="16.5" cy="16" r="1.2"/>
+    </symbol>
+    <symbol id="i-church" viewBox="0 0 24 24">
+        <path d="M12 2v4M10 4h4M6 21V10l6-4 6 4v11M9 21v-5h6v5M4 21h16"/>
+    </symbol>
+    <symbol id="i-mask" viewBox="0 0 24 24">
+        <path d="M4 6c2.6-2 5.3-3 8-3s5.4 1 8 3c0 6-3.2 12-8 15-4.8-3-8-9-8-15Z"/>
+        <path d="M8 10c1.2.8 2.6 1.2 4 1.2s2.8-.4 4-1.2M8 15c1.2.6 2.6.9 4 .9s2.8-.3 4-.9"/>
+    </symbol>
+    <symbol id="i-gamepad" viewBox="0 0 24 24">
+        <path d="M7 8h10a4 4 0 0 1 3.9 3.1l.7 3.3a2.5 2.5 0 0 1-4.4 2.2L15.5 15h-7l-1.7 1.6a2.5 2.5 0 0 1-4.4-2.2l.7-3.3A4 4 0 0 1 7 8Z"/>
+        <path d="M8 11v3M6.5 12.5h3M15.5 11.5h.01M17.5 13.5h.01"/>
+    </symbol>
+    <symbol id="i-cube" viewBox="0 0 24 24">
+        <path d="m12 2 8 4.5v9L12 20l-8-4.5v-9L12 2Z"/>
+        <path d="m4 6.5 8 4.5 8-4.5M12 11v9"/>
+    </symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24">
+        <path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
+    </symbol>
+    <symbol id="i-telegram" viewBox="0 0 24 24">
+        <path d="M21.6 3.6 2.9 10.8c-.9.3-.9 1.4 0 1.7l4.7 1.5 1.8 5.3c.3.8 1.2 1 1.8.4l2.6-2.4 4.6 3.4c.7.5 1.6.1 1.8-.7l3-14.5c.2-1-.7-1.7-1.6-1.4ZM8.1 14l9.2-6-7.1 7.6-.3 3-1.8-4.6Z"/>
+    </symbol>
+    <symbol id="i-coffee" viewBox="0 0 24 24">
+        <path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/>
+        <path d="M16 9h2a3 3 0 0 1 0 6h-2M6 3v2M10 3v2M14 3v2"/>
+    </symbol>
+    <symbol id="i-share" viewBox="0 0 24 24">
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="14" rx="2"/>
+        <path d="m3 7 9 6 9-6"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24">
+        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+        <circle cx="12" cy="10" r="2.5"/>
+    </symbol>
+    <symbol id="i-roblox" viewBox="0 0 24 24">
+        <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2.2 4.4v9.2h2.2v-3h2.1l1.8 3h2.5l-2.1-3.4c1.2-.4 1.9-1.3 1.9-2.7 0-2-1.3-3.1-3.6-3.1H7.2Zm2.2 1.8h1.9c1 0 1.5.4 1.5 1.2 0 .8-.5 1.2-1.5 1.2h-1.9V9.2Z"/>
+    </symbol>
+    <symbol id="i-external" viewBox="0 0 24 24">
+        <path d="M14 4h6v6M20 4l-9 9"/>
+        <path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/>
+    </symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24">
+        <path d="M14 4c3-2 6-1 6-1s1 3-1 6l-5 5-4-4 4-6Z"/>
+        <path d="M9 13 5 9M6 16l-2-2M9 19l-2-2M12 12l-6 6"/>
+    </symbol>
+</svg>
+
+<div class="bg-wrap" id="bgWrap" aria-hidden="true">
     <div class="deco-circle deco-1"></div>
     <div class="deco-circle deco-2"></div>
     <div class="fog">
@@ -1289,513 +245,514 @@
     </div>
     <div class="fireflies" id="fireflies"></div>
 </div>
-<div class="vignette"></div>
-<div class="film-grain"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="film-grain" aria-hidden="true"></div>
 
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<header>
-    <div class="container navbar">
-        <div class="logo-wrapper">
-            <img src="L.webp" alt="LUNCLIN Studio" class="logo-image" onerror="this.onerror=null; this.src='L.png';">
-            <div class="logo">LUN<span>CLIN</span></div>
-        </div>
-        <div class="nav-links">
+<header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="LUNCLIN Studio — на главную">
+            <picture class="brand-picture">
+                <source srcset="logo-96.webp" type="image/webp">
+                <img src="logo-96.png" alt="" width="96" height="96" fetchpriority="high">
+            </picture>
+            <span class="brand-name" aria-hidden="true">LUN<span>CLIN</span></span>
+        </a>
+
+        <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Открыть меню">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="site-nav" id="primaryNav" aria-label="Основная навигация">
             <a href="#about">О нас</a>
             <a href="#projects">Игры</a>
             <a href="#roadmap">Планы</a>
             <a href="#support">Поддержать</a>
-            <a href="#contact">Контакты</a>
-        </div>
+            <a href="#team">Команда</a>
+            <a class="nav-cta" href="#contact">Связаться</a>
+        </nav>
     </div>
 </header>
 
-<main>
-    <section class="hero">
-        <div class="container hero-content">
-            <h1>
+<main id="main">
+
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-inner">
+            <p class="eyebrow">Независимая студия · Нижний Новгород</p>
+            <h1 id="hero-title">
                 <span class="word">Делаем</span> <span class="word">игры,</span><br>
                 <span class="word">которые</span> <span class="word accent">хочется</span> <span class="word accent">проходить</span>
             </h1>
-            <p>LUNCLIN — инди-студия из Нижнего Новгорода. Создаем игры в Roblox и за его пределами (переходим на Unity).</p>
-            <div class="hero-buttons">
-                <a href="#projects" class="btn btn-primary">Наши проекты</a>
-                <a href="#contact" class="btn btn-outline">Связаться</a>
+            <p class="hero-lead">LUNCLIN — независимая студия из Нижнего Новгорода. Создаём атмосферные игры для Roblox и готовим первый проект на Unity.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#projects">Смотреть игры <span aria-hidden="true">→</span></a>
+                <a class="btn btn-outline" href="#contact">Связаться</a>
             </div>
+            <ul class="hero-meta" aria-label="Платформы">
+                <li>Roblox</li>
+                <li>Unity</li>
+                <li>Steam</li>
+            </ul>
         </div>
     </section>
 
-    <section id="about">
+    <section class="section" id="about" aria-labelledby="about-title">
         <div class="container">
-            <h2>О нас</h2>
-            <div class="section-sub">Мы — небольшая команда, которая делает игры с душой.</div>
+            <div class="section-head">
+                <p class="eyebrow">01 — О нас</p>
+                <h2 id="about-title">Небольшая команда, большие миры</h2>
+                <p class="section-sub">Мы делаем игры с душой — от идеи и первого прототипа до релиза и поддержки сообщества.</p>
+            </div>
+
             <div class="features-grid">
-                <div class="feature-card fade-up">
-                    <div class="feature-icon"><i class="fas fa-car"></i></div>
+                <article class="feature-card fade-up">
+                    <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-car"></use></svg></div>
                     <h3>Ролевые игры</h3>
-                    <p><strong>Frostvale RP</strong> — атмосфера старой России в Roblox.</p>
-                </div>
-                <div class="feature-card fade-up">
-                    <div class="feature-icon"><i class="fas fa-church"></i></div>
+                    <p><strong>Frostvale RP</strong> — атмосфера старой России и зимний открытый мир в Roblox.</p>
+                </article>
+                <article class="feature-card fade-up">
+                    <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-church"></use></svg></div>
                     <h3>Психологический хоррор</h3>
                     <p><strong>The Church of Silence</strong> — тихий ужас в маленьком городке.</p>
-                </div>
-                <div class="feature-card fade-up">
-                    <div class="feature-icon"><i class="fas fa-mask"></i></div>
+                </article>
+                <article class="feature-card fade-up">
+                    <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-mask"></use></svg></div>
                     <h3>Игры на выживание</h3>
-                    <p><strong>Recognize The Traitor</strong> — все одинаковы, найди убийцу.</p>
-                </div>
-                <div class="feature-card fade-up">
-                    <div class="feature-icon"><i class="fas fa-cube"></i></div>
-                    <h3>Unity в планах</h3>
-                    <p>Следующий шаг — кроссплатформенные игры на Unity.</p>
-                </div>
+                    <p><strong>Recognize The Traitor</strong> — все одинаковы, найди убийцу первым.</p>
+                </article>
+                <article class="feature-card fade-up">
+                    <div class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-gamepad"></use></svg></div>
+                    <h3>Unity в работе</h3>
+                    <p>Готовим первый кроссплатформенный проект студии с прицелом на релиз в Steam.</p>
+                </article>
             </div>
         </div>
     </section>
 
-    <section id="projects">
+    <section class="section" id="projects" aria-labelledby="projects-title">
         <div class="container">
-            <h2>Наши игры</h2>
-            <div class="section-sub">Что уже в разработке, а что ещё в мыслях.</div>
+            <div class="section-head">
+                <p class="eyebrow">02 — Проекты</p>
+                <h2 id="projects-title">Наши игры</h2>
+                <p class="section-sub">Что уже можно попробовать, а что пока живёт в концептах и прототипах.</p>
+            </div>
+
             <div class="projects-grid">
-
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="UP.webp" alt="UP!" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
-                        <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <div class="secret-box">
-                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
-                                <p class="secret-text">«Иногда вверх — единственное направление.»</p>
-                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
-                            </div>
-                        </a>
+                <article class="project-card fade-up">
+                    <div class="project-media">
+                        <picture>
+                            <source srcset="FrostvaleRP.webp" type="image/webp">
+                            <img src="FrostvaleRP.jpg" alt="Frostvale Role Play — зимняя ролевая игра в Roblox" width="800" height="800" loading="lazy" decoding="async">
+                        </picture>
                     </div>
-                    <div class="project-info">
+                    <div class="project-body">
                         <div class="project-tags">
-                            <span class="project-badge status">В разработке</span>
-                            <span class="project-badge platform">Unity</span>
-                        </div>
-                        <h3>UP!</h3>
-                        <p>Аркадный Only-up паркур в стиле Low-Poly.</p>
-                    </div>
-                </div>
-
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="Market.jpg" alt="UP!" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
-                        <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <div class="secret-box">
-                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
-                                <p class="secret-text">« Не пойман - не вор»</p>
-                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span class="project-badge status">В разработке</span>
-                            <span class="project-badge platform">Unity</span>
-                        </div>
-                        <h3>Market</h3>
-                        <p>Не дай местным воришкам обокрасть твой магазин.</p>
-                    </div>
-                </div>
-
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="FrostvaleRP.webp" alt="Frostvale Role Play" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="placeholder-icon" style="display:none;"><i class="fas fa-snowflake"></i></div>
-                        <a href="https://www.roblox.com/share?code=a63b220bb76d7d40b744446382b72591&type=ExperienceDetails&stamp=1785743805280" target="_blank" class="project-link-overlay">
-                            <div class="secret-box">
-                                <div class="secret-icon"><i class="fas fa-external-link-alt"></i></div>
-                                <p class="secret-text">«Зима уже наступила. Загляни.»</p>
-                                <span class="secret-hint"><i class="fas fa-play"></i> Играть</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="project-info">
-                        <div class="project-tags">
-                            <span class="project-badge status">Приостановлен</span>
-                            <span class="project-badge platform">Roblox</span>
+                            <span class="badge status">Открытая альфа</span>
+                            <span class="badge platform">Roblox</span>
                         </div>
                         <h3>Frostvale Role Play</h3>
-                        <p>Ролевая игра с открытым миром и атмосферой 00-х.</p>
+                        <p>Ролевая игра с открытым миром и атмосферой 00-х. Уже доступна в Roblox и продолжает обновляться.</p>
+                        <div class="project-actions">
+                            <a class="btn btn-primary btn-sm" href="https://www.roblox.com/share?code=a63b220bb76d7d40b744446382b72591&amp;type=ExperienceDetails&amp;stamp=1785743805280" target="_blank" rel="noopener noreferrer">
+                                Играть в Roblox
+                                <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </article>
 
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="The Church of Silence.webp" alt="The Church of Silence" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="placeholder-icon" style="display:none;"><i class="fas fa-church"></i></div>
-                        <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <div class="secret-box">
-                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
-                                <p class="secret-text">«Тишина в церкви — не всегда благодать.»</p>
-                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
-                            </div>
-                        </a>
+                <article class="project-card fade-up">
+                    <div class="project-media">
+                        <picture>
+                            <source srcset="UP.webp" type="image/webp">
+                            <img src="UP.jpg" alt="UP! — концепт аркадного паркура в стиле low-poly" width="800" height="800" loading="lazy" decoding="async">
+                        </picture>
                     </div>
-                    <div class="project-info">
+                    <div class="project-body">
                         <div class="project-tags">
-                            <span class="project-badge status">Концепт</span>
-                            <span class="project-badge platform">Roblox</span>
+                            <span class="badge status">Концепт</span>
+                            <span class="badge platform">Unity</span>
+                        </div>
+                        <h3>UP!</h3>
+                        <p>Аркадный only-up паркур в стиле low-poly: поднимайся выше и не падай вниз.</p>
+                        <div class="project-actions">
+                            <button class="btn btn-outline btn-sm" type="button" data-project="up">Подробнее</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card fade-up">
+                    <div class="project-media">
+                        <picture>
+                            <source srcset="Market.webp" type="image/webp">
+                            <img src="Market.jpg" alt="Market — концепт игры про магазин и воришек" width="570" height="570" loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="badge status">Концепт</span>
+                            <span class="badge platform">Unity</span>
+                        </div>
+                        <h3>Market</h3>
+                        <p>Не дай местным воришкам обокрасть твой магазин. Следи за прилавком и раскрывай кражи.</p>
+                        <div class="project-actions">
+                            <button class="btn btn-outline btn-sm" type="button" data-project="market">Подробнее</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card fade-up">
+                    <div class="project-media">
+                        <picture>
+                            <source srcset="The%20Church%20of%20Silence.webp" type="image/webp">
+                            <img src="The%20Church%20of%20Silence.jpg" alt="The Church of Silence — концепт психологического хоррора" width="800" height="800" loading="lazy" decoding="async">
+                        </picture>
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="badge status">Концепт</span>
+                            <span class="badge platform">Roblox</span>
                         </div>
                         <h3>The Church of Silence</h3>
-                        <p>Survival horror, где вы исследуете подозрительную церковь.</p>
+                        <p>Survival horror, где вы исследуете подозрительную церковь и пытаетесь понять, что скрывается за тишиной.</p>
+                        <div class="project-actions">
+                            <button class="btn btn-outline btn-sm" type="button" data-project="church">Подробнее</button>
+                        </div>
                     </div>
-                </div>
+                </article>
 
-                <div class="project-item fade-up">
-                    <div class="project-img">
-                        <img src="Recognize The Traitor.webp" alt="Recognize The Traitor" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="placeholder-icon" style="display:none;"><i class="fas fa-user-secret"></i></div>
-                        <a href="#" class="project-link-overlay" onclick="alert('Пока что, это только концепт.'); return false;">
-                            <div class="secret-box">
-                                <div class="secret-icon"><i class="fas fa-moon"></i></div>
-                                <p class="secret-text">«Среди одинаковых всегда есть один другой.»</p>
-                                <span class="secret-hint"><i class="fas fa-lock"></i> Концепт</span>
-                            </div>
-                        </a>
+                <article class="project-card fade-up">
+                    <div class="project-media">
+                        <picture>
+                            <source srcset="Recognize%20The%20Traitor.webp" type="image/webp">
+                            <img src="Recognize%20The%20Traitor.jpg" alt="Recognize The Traitor — концепт социальной игры на вычисление убийцы" width="800" height="800" loading="lazy" decoding="async">
+                        </picture>
                     </div>
-                    <div class="project-info">
+                    <div class="project-body">
                         <div class="project-tags">
-                            <span class="project-badge status">Концепт</span>
-                            <span class="project-badge platform">Roblox</span>
+                            <span class="badge status">Концепт</span>
+                            <span class="badge platform">Roblox</span>
                         </div>
                         <h3>Recognize The Traitor</h3>
-                        <p>Все игроки одинаковы. Вычисли убийцу по поведению.</p>
+                        <p>Все игроки одинаковы. Вычисли убийцу по поведению, пока он не добрался до тебя.</p>
+                        <div class="project-actions">
+                            <button class="btn btn-outline btn-sm" type="button" data-project="traitor">Подробнее</button>
+                        </div>
                     </div>
-                </div>
-
+                </article>
             </div>
         </div>
     </section>
 
-    <section id="roadmap">
+    <section class="section" id="roadmap" aria-labelledby="roadmap-title">
         <div class="container">
-            <h2>Ближайшие планы</h2>
-            <div class="section-sub">Что и когда выходит.</div>
-            <div class="roadmap-cards">
+            <div class="section-head">
+                <p class="eyebrow">03 — Планы</p>
+                <h2 id="roadmap-title">Ближайшие планы</h2>
+                <p class="section-sub">Коротко о том, куда движется студия. Даты могут сдвигаться — так бывает в разработке.</p>
+            </div>
+
+            <div class="roadmap-list">
                 <div class="roadmap-card fade-up">
-                    <div class="roadmap-icon"><i class="fas fa-gamepad"></i></div>
-                    <div class="roadmap-date">Лето 2026</div>
-                    <div class="roadmap-text">Переход на Unity</div>
+                    <div class="roadmap-icon"><svg class="icon" aria-hidden="true"><use href="#i-gamepad"></use></svg></div>
+                    <div class="roadmap-date">Сейчас</div>
+                    <div class="roadmap-text">Переход на Unity: прототипы, инструменты и первый playable-билд.</div>
                 </div>
                 <div class="roadmap-card fade-up">
-                    <div class="roadmap-icon"><i class="fas fa-cube"></i></div>
-                    <div class="roadmap-date">Осень 2026</div>
-                    <div class="roadmap-text">Начало разработки первого проекта на Unity.</div>
+                    <div class="roadmap-icon"><svg class="icon" aria-hidden="true"><use href="#i-cube"></use></svg></div>
+                    <div class="roadmap-date">2027</div>
+                    <div class="roadmap-text">Первый полноценный проект студии на Unity и подготовка страницы в Steam.</div>
                 </div>
                 <div class="roadmap-card fade-up">
-                    <div class="roadmap-icon"><i class="fas fa-rocket"></i></div>
-                    <div class="roadmap-date">Осень 2027</div>
-                    <div class="roadmap-text">Первый релиз в Steam</div>
+                    <div class="roadmap-icon"><svg class="icon" aria-hidden="true"><use href="#i-rocket"></use></svg></div>
+                    <div class="roadmap-date">Далее</div>
+                    <div class="roadmap-text">Релиз в Steam, развитие сообщества и новые эксперименты с жанрами.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="support">
+    <section class="section" id="support" aria-labelledby="support-title">
         <div class="container">
-            <h2>Поддержать студию</h2>
-            <div class="section-sub">Любая помощь — вклад в будущие игры.</div>
+            <div class="section-head">
+                <p class="eyebrow">04 — Поддержка</p>
+                <h2 id="support-title">Поддержать студию</h2>
+                <p class="section-sub">Любая помощь — вклад в будущие игры. Даже одно сообщение другу помогает больше, чем кажется.</p>
+            </div>
+
             <div class="support-card fade-up">
-                <i class="fas fa-heart support-heart"></i>
-                <p style="font-size: 1.2rem;">Если тебе нравится то, что мы делаем, поддержи нас.</p>
+                <div class="support-heart" aria-hidden="true"><svg class="icon icon--solid"><use href="#i-heart"></use></svg></div>
+                <h3>Спасибо, что ты рядом</h3>
+                <p>Если тебе нравится то, что мы делаем, поддержи нас. Сейчас самый простой способ — написать в Telegram или поделиться сайтом.</p>
+
                 <div class="support-options">
-                    <div class="support-option"><i class="fab fa-boosty"></i><p><strong>Boosty</strong><br>Подписка</p></div>
-                    <div class="support-option"><i class="fas fa-coffee"></i><p><strong>Разово</strong><br>На кофе</p></div>
-                    <div class="support-option"><i class="fas fa-comment"></i><p><strong>Бесплатно</strong><br>Расскажи друзьям</p></div>
+                    <div class="support-option is-disabled" aria-disabled="true">
+                        <svg class="icon icon--solid" aria-hidden="true"><use href="#i-telegram"></use></svg>
+                        <strong>Boosty</strong>
+                        <span>Скоро</span>
+                    </div>
+                    <a class="support-option" href="https://t.me/lunclin" target="_blank" rel="noopener noreferrer">
+                        <svg class="icon" aria-hidden="true"><use href="#i-coffee"></use></svg>
+                        <strong>Разово</strong>
+                        <span>Написать в Telegram</span>
+                    </a>
+                    <button class="support-option" type="button" data-share>
+                        <svg class="icon" aria-hidden="true"><use href="#i-share"></use></svg>
+                        <strong>Бесплатно</strong>
+                        <span>Поделиться сайтом</span>
+                    </button>
                 </div>
-                <a href="https://boosty.to/lunclin" target="_blank" class="btn btn-boosty">Поддержать на Boosty →</a>
+
+                <div class="support-actions">
+                    <a class="btn btn-ember" href="https://t.me/lunclin" target="_blank" rel="noopener noreferrer">
+                        Написать в Telegram
+                        <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
+                    </a>
+                    <a class="btn btn-outline" href="mailto:lunclin.studio@gmail.com">Написать на почту</a>
+                </div>
+                <p class="support-note">Boosty временно недоступен — актуальная ссылка появится здесь позже.</p>
             </div>
         </div>
     </section>
 
-    <section id="faq">
+    <section class="section" id="faq" aria-labelledby="faq-title">
         <div class="container">
-            <h2>Частые вопросы</h2>
+            <div class="section-head">
+                <p class="eyebrow">05 — Вопросы</p>
+                <h2 id="faq-title">Частые вопросы</h2>
+            </div>
+
             <div class="faq-grid">
-                <div class="faq-item fade-up">
-                    <div class="faq-question">Будут ли игры не только в Roblox?</div>
-                    <div>— Да. Студия уже делает первые наброски будущей игры на Unity. Релиз в Steam.</div>
-                </div>
-                <div class="faq-item fade-up">
-                    <div class="faq-question">Когда выйдет Frostvale RP?</div>
-                    <div>— Уже можно играть. Игра в открытом альфа тестировании (Roblox), постоянно обновляется.</div>
-                </div>
-                <div class="faq-item fade-up">
-                    <div class="faq-question">Как помочь студии, кроме денег?</div>
-                    <div>— Рассказывать друзьям, давать фидбек в Telegram, тестировать новые механики.</div>
-                </div>
+                <details class="faq-item fade-up">
+                    <summary>Будут ли игры не только в Roblox?</summary>
+                    <div class="faq-answer">
+                        <p>Да. Сейчас студия работает над первым проектом на Unity; в планах — релиз в Steam.</p>
+                    </div>
+                </details>
+                <details class="faq-item fade-up">
+                    <summary>Когда выйдет Frostvale RP?</summary>
+                    <div class="faq-answer">
+                        <p>Игра уже доступна в Roblox в открытой альфе и продолжает обновляться. Загляни на страницу проекта — там есть кнопка «Играть».</p>
+                    </div>
+                </details>
+                <details class="faq-item fade-up">
+                    <summary>Как помочь студии, кроме денег?</summary>
+                    <div class="faq-answer">
+                        <p>Рассказать друзьям, прислать фидбек в Telegram и протестировать новые механики. Для инди-команды это очень важно.</p>
+                    </div>
+                </details>
+                <details class="faq-item fade-up">
+                    <summary>Как попасть в команду?</summary>
+                    <div class="faq-answer">
+                        <p>Напиши на <a href="mailto:lunclin.studio@gmail.com">lunclin.studio@gmail.com</a> или в Telegram и приложи примеры работ. Сейчас открыты вакансии 3D-моделера и UI-дизайнера.</p>
+                    </div>
+                </details>
             </div>
         </div>
     </section>
 
-    <section id="team">
+    <section class="section" id="team" aria-labelledby="team-title">
         <div class="container">
-            <h2>За кулисами</h2>
-            <div class="section-sub">Небольшая команда, которая делает всё от идеи до релиза.</div>
+            <div class="section-head">
+                <p class="eyebrow">06 — Команда</p>
+                <h2 id="team-title">За кулисами</h2>
+                <p class="section-sub">Небольшая команда, которая делает всё от идеи до релиза. И два места, которые ждут своих людей.</p>
+            </div>
+
             <div class="team-grid">
-
-                <div class="team-card fade-up">
+                <article class="team-card fade-up">
                     <div class="team-avatar">
-                        <img src="Keypht.webp" alt="Keypht" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-dragon\'></i>'">
+                        <span class="avatar-fallback" aria-hidden="true">K</span>
+                        <picture>
+                            <source srcset="Keypht.webp" type="image/webp">
+                            <img src="Keypht.jpg" alt="" width="400" height="400" loading="lazy" decoding="async">
+                        </picture>
                     </div>
-                    <h4>Keypht</h4>
-                    <p>Геймдизайнер & Программист</p>
-                </div>
+                    <h3>Keypht</h3>
+                    <p>Геймдизайнер &amp; программист</p>
+                </article>
 
-                <div class="team-card fade-up">
+                <article class="team-card fade-up">
                     <div class="team-avatar">
-                        <img src="Taburetka.webp" alt="Taburetka" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-gamepad\'></i>'">
+                        <span class="avatar-fallback" aria-hidden="true">T</span>
+                        <picture>
+                            <source srcset="Taburetka.webp" type="image/webp">
+                            <img src="Taburetka.jpg" alt="" width="400" height="400" loading="lazy" decoding="async">
+                        </picture>
                     </div>
-                    <h4>Taburetka</h4>
-                    <p>Геймплей разработчик</p>
-                </div>
+                    <h3>Taburetka</h3>
+                    <p>Геймплей-разработчик</p>
+                </article>
 
-                <div class="team-card fade-up">
+                <article class="team-card fade-up">
                     <div class="team-avatar">
-                        <img src="CrazyKreeke66.webp" alt="CrazyKreeke66" loading="lazy" decoding="async" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-palette\'></i>'">
+                        <span class="avatar-fallback" aria-hidden="true">C</span>
+                        <picture>
+                            <source srcset="CrazyKreeke66.webp" type="image/webp">
+                            <img src="CrazyKreeke66.jpg" alt="" width="400" height="400" loading="lazy" decoding="async">
+                        </picture>
                     </div>
-                    <h4>CrazyKreeke66</h4>
-                    <p>Моделер & Художник</p>
-                </div>
+                    <h3>CrazyKreeke66</h3>
+                    <p>Моделер &amp; художник</p>
+                </article>
 
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-cube"></i></div>
-                    <h4>Вакансия</h4>
-                    <p>3D-Моделер</p>
+                <article class="team-card is-vacancy fade-up">
+                    <div class="team-avatar">
+                        <span class="avatar-fallback" aria-hidden="true">3D</span>
+                    </div>
+                    <h3>3D-моделер</h3>
+                    <p>Вакансия в команде</p>
                     <span class="vacancy-badge">Ждём тебя!</span>
-                </div>
+                    <a class="team-link" href="mailto:lunclin.studio@gmail.com?subject=Вакансия%203D-моделера">Откликнуться</a>
+                </article>
 
-                <div class="team-card fade-up">
-                    <div class="team-avatar"><i class="fas fa-pen-ruler"></i></div>
-                    <h4>Вакансия</h4>
-                    <p>UI Дизайнер</p>
+                <article class="team-card is-vacancy fade-up">
+                    <div class="team-avatar">
+                        <span class="avatar-fallback" aria-hidden="true">UI</span>
+                    </div>
+                    <h3>UI-дизайнер</h3>
+                    <p>Вакансия в команде</p>
                     <span class="vacancy-badge">Ждём тебя!</span>
-                </div>
-
+                    <a class="team-link" href="mailto:lunclin.studio@gmail.com?subject=Вакансия%20UI-дизайнера">Откликнуться</a>
+                </article>
             </div>
         </div>
     </section>
 
-    <section id="contact">
+    <section class="section" id="contact" aria-labelledby="contact-title">
         <div class="container">
-            <h2>Свяжитесь с нами</h2>
-            <div class="section-sub">Хочешь вступить в состав студии или хочешь просто что-то предложить, то напиши нам.</div>
-            <div class="contact-flex">
+            <div class="contact-card">
                 <div class="contact-info">
-                    <h3>LUNCLIN <span style="color:var(--primary)">Studio</span></h3>
-                    <p>Из Нижнего Новгорода с любовью к играм.</p>
-                    <div class="contact-details">
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:lunclin.studio@gmail.com" style="color: inherit; text-decoration: none;">lunclin.studio@gmail.com</a></p>
-                        <p><i class="fab fa-telegram"></i> <a href="https://t.me/lunclin" target="_blank" style="color: inherit; text-decoration: none;">t.me/lunclin</a></p>
-                        <p><i class="fas fa-users"></i> <a href="https://www.roblox.com/communities/35756576/LUNCLIN-Indie-Studio#!/about" target="_blank" style="color: inherit; text-decoration: none;">Группа в Roblox</a></p>
-                        <p><i class="fas fa-map-marker-alt"></i> Нижний Новгород / Россия</p>
-                    </div>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fab fa-itch-io"></i></a>
+                    <p class="eyebrow">07 — Контакты</p>
+                    <h2 id="contact-title">Свяжитесь с нами</h2>
+                    <p class="contact-intro">Хочешь в команду или есть идея? Напиши нам — ответим.</p>
+
+                    <ul class="contact-list">
+                        <li>
+                            <svg class="icon" aria-hidden="true"><use href="#i-mail"></use></svg>
+                            <a href="mailto:lunclin.studio@gmail.com">lunclin.studio@gmail.com</a>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true"><use href="#i-telegram"></use></svg>
+                            <a href="https://t.me/lunclin" target="_blank" rel="noopener noreferrer">t.me/lunclin</a>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true"><use href="#i-roblox"></use></svg>
+                            <a href="https://www.roblox.com/communities/35756576/LUNCLIN-Indie-Studio" target="_blank" rel="noopener noreferrer">Группа в Roblox</a>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
+                            <span>Нижний Новгород, Россия</span>
+                        </li>
+                    </ul>
+
+                    <div class="social-links" aria-label="Социальные сети">
+                        <a href="https://t.me/lunclin" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                            <svg class="icon icon--solid" aria-hidden="true"><use href="#i-telegram"></use></svg>
+                        </a>
+                        <a href="https://www.roblox.com/communities/35756576/LUNCLIN-Indie-Studio" target="_blank" rel="noopener noreferrer" aria-label="Roblox">
+                            <svg class="icon icon--solid" aria-hidden="true"><use href="#i-roblox"></use></svg>
+                        </a>
+                        <a href="mailto:lunclin.studio@gmail.com" aria-label="Написать на email">
+                            <svg class="icon" aria-hidden="true"><use href="#i-mail"></use></svg>
+                        </a>
                     </div>
                 </div>
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="input-group">
-                            <input type="text" id="name" placeholder="Ваше имя" required>
+
+                <form class="contact-form" id="contactForm" action="https://formsubmit.co/lunclin.studio@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="Новое сообщение с сайта LUNCLIN">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input class="form-honeypot" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="name">Имя</label>
+                            <input id="name" name="name" type="text" autocomplete="name" placeholder="Как к тебе обращаться" required minlength="2">
                         </div>
-                        <div class="input-group">
-                            <input type="email" id="email" placeholder="Email" required>
+                        <div class="form-field">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
                         </div>
-                        <div class="input-group">
-                            <textarea rows="4" id="message" placeholder="Напиши что-нибудь..."></textarea>
-                        </div>
-                        <button type="submit">Отправить <i class="fas fa-paper-plane"></i></button>
-                    </form>
-                    <p id="formFeedback" style="margin-top: 12px; font-size: 0.85rem;"></p>
-                </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="topic">Тема</label>
+                        <select id="topic" name="topic" required>
+                            <option value="" selected disabled>Выбери тему</option>
+                            <option value="В команду">В команду</option>
+                            <option value="Идея или предложение">Идея или предложение</option>
+                            <option value="Поддержка">Поддержка</option>
+                            <option value="Другое">Другое</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="message">Сообщение</label>
+                        <textarea id="message" name="message" rows="5" autocomplete="off" placeholder="Расскажи, что хочешь предложить" required minlength="10"></textarea>
+                    </div>
+
+                    <label class="consent">
+                        <input type="checkbox" name="consent" value="yes" required>
+                        <span>Согласен с <a href="privacy.html">политикой конфиденциальности</a> и обработкой данных для ответа на сообщение.</span>
+                    </label>
+
+                    <button class="btn btn-primary btn-block" type="submit">Отправить сообщение <span aria-hidden="true">→</span></button>
+                    <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+                </form>
             </div>
         </div>
     </section>
+
 </main>
 
-<footer>
-    <div class="container">
-        <p>© 2026 LUNCLIN Studio</p>
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <picture>
+                <source srcset="logo-96.webp" type="image/webp">
+                <img src="logo-96.png" alt="" width="96" height="96" loading="lazy" decoding="async">
+            </picture>
+            <p><strong>LUNCLIN Studio</strong>Из Нижнего Новгорода с любовью к играм.</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Навигация в подвале">
+            <a href="#about">О нас</a>
+            <a href="#projects">Игры</a>
+            <a href="#roadmap">Планы</a>
+            <a href="#support">Поддержать</a>
+            <a href="#team">Команда</a>
+            <a href="#contact">Контакты</a>
+        </nav>
+
+        <div class="footer-meta">
+            <p>© <span id="year">2026</span> LUNCLIN Studio</p>
+            <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
     </div>
 </footer>
 
-<script>
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+<dialog class="project-dialog" id="projectDialog" aria-labelledby="dialogTitle">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Закрыть окно">×</button>
+    <div class="dialog-media">
+        <img id="dialogImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="800" height="800">
+    </div>
+    <div class="dialog-body">
+        <div class="project-tags" id="dialogTags"></div>
+        <h2 id="dialogTitle">Проект</h2>
+        <p id="dialogDescription"></p>
+        <blockquote class="dialog-quote" id="dialogQuote"></blockquote>
+        <p class="dialog-note">Проект в разработке. Следи за новостями в Telegram.</p>
+        <a class="btn btn-primary" href="https://t.me/lunclin" target="_blank" rel="noopener noreferrer">
+            Следить за проектом
+            <svg class="icon" aria-hidden="true"><use href="#i-external"></use></svg>
+        </a>
+    </div>
+</dialog>
 
-    /* ===== Светлячки ===== */
-    function createFireflies() {
-        const container = document.getElementById('fireflies');
-        const count = window.innerWidth < 640 ? 14 : 46;
-        for (let i = 0; i < count; i++) {
-            const f = document.createElement('div');
-            f.classList.add('firefly');
-            if (i % 3 === 0) f.classList.add('firefly-green');
-            const s = Math.random() * 3 + 2;
-            f.style.width = s + 'px';
-            f.style.height = s + 'px';
-            f.style.left = Math.random() * 100 + '%';
-            f.style.bottom = Math.random() * 30 - 25 + 'vh';
-            f.style.setProperty('--fx1', (Math.random() * 60 - 30) + 'px');
-            f.style.setProperty('--fx2', (Math.random() * 120 - 60) + 'px');
-            f.style.setProperty('--fx3', (Math.random() * 60 - 30) + 'px');
-            f.style.setProperty('--fly-dur', (Math.random() * 16 + 14) + 's');
-            f.style.setProperty('--flick-dur', (Math.random() * 2.5 + 1.2) + 's');
-            f.style.animationDelay = (-Math.random() * 24) + 's, ' + (-Math.random() * 3) + 's';
-            container.appendChild(f);
-        }
-    }
-
-    /* ===== Параллакс фона при скролле ===== */
-    function initParallax() {
-        const wrap = document.getElementById('bgWrap');
-        const deco1 = document.querySelector('.deco-1');
-        const deco2 = document.querySelector('.deco-2');
-        let ticking = false;
-        window.addEventListener('scroll', () => {
-            if (ticking) return;
-            requestAnimationFrame(() => {
-                const y = window.scrollY;
-                wrap.style.transform = `translateY(${y * 0.05}px)`;
-                if (deco1) deco1.style.transform = `translateY(${y * 0.08}px)`;
-                if (deco2) deco2.style.transform = `translateY(${-y * 0.06}px)`;
-                ticking = false;
-            });
-            ticking = true;
-        }, { passive: true });
-    }
-
-    /* ===== Появление заголовка по словам ===== */
-    document.querySelectorAll('.hero h1 .word').forEach((w, i) => {
-        w.style.animationDelay = `${0.15 + i * 0.14}s`;
-    });
-
-    /* ===== Кастомный курсор ===== */
-    if (window.matchMedia('(pointer: fine)').matches) {
-        const dot = document.getElementById('cursorDot');
-        const ring = document.getElementById('cursorRing');
-        let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-        let rx = mx, ry = my;
-        window.addEventListener('mousemove', (e) => {
-            mx = e.clientX;
-            my = e.clientY;
-            dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-        });
-        (function loop() {
-            rx += (mx - rx) * 0.18;
-            ry += (my - ry) * 0.18;
-            ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
-            requestAnimationFrame(loop);
-        })();
-        document.querySelectorAll('a, button, input, textarea, .project-item, .feature-card, .btn').forEach(el => {
-            el.addEventListener('mouseenter', () => ring.classList.add('is-hover'));
-            el.addEventListener('mouseleave', () => ring.classList.remove('is-hover'));
-        });
-        window.addEventListener('mousedown', () => ring.classList.add('is-down'));
-        window.addEventListener('mouseup', () => ring.classList.remove('is-down'));
-    }
-
-    /* ===== 3D-tilt карточек игр ===== */
-    document.querySelectorAll('.project-item').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const r = card.getBoundingClientRect();
-            const px = (e.clientX - r.left) / r.width - 0.5;
-            const py = (e.clientY - r.top) / r.height - 0.5;
-            card.style.transform = `perspective(900px) rotateX(${-py * 8}deg) rotateY(${px * 10}deg) translateY(-12px)`;
-            const img = card.querySelector('.project-img img, .placeholder-icon');
-            if (img) img.style.transform = `scale(1.08) translate(${px * -10}px, ${py * -10}px)`;
-        });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-            const img = card.querySelector('.project-img img, .placeholder-icon');
-            if (img) img.style.transform = '';
-        });
-    });
-
-    /* ===== Пасхалка: 5 кликов по логотипу ===== */
-    const toast = document.getElementById('toast');
-    let logoClicks = 0;
-    let logoTimer = null;
-    document.querySelector('.logo-image').addEventListener('click', () => {
-        logoClicks++;
-        clearTimeout(logoTimer);
-        logoTimer = setTimeout(() => logoClicks = 0, 2500);
-        if (logoClicks >= 5) {
-            logoClicks = 0;
-            toast.textContent = '🌙 Лунный свет уже на твоей стороне…';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-    });
-
-    /* ===== Форма ===== */
-    const form = document.getElementById('contactForm');
-    const feedback = document.getElementById('formFeedback');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const msg = document.getElementById('message').value.trim();
-            if (!name || !email || !msg) {
-                feedback.innerHTML = '❌ Заполни все поля.';
-                feedback.style.color = '#f7b05e';
-                return;
-            }
-            if (!email.includes('@') || !email.includes('.')) {
-                feedback.innerHTML = '❌ Email похож на правильный?';
-                feedback.style.color = '#f7b05e';
-                return;
-            }
-            feedback.innerHTML = `✅ Спасибо, ${name}! Скоро свяжусь.`;
-            feedback.style.color = '#b3e6a0';
-            form.reset();
-            setTimeout(() => feedback.innerHTML = '', 5000);
-        });
-    }
-
-    /* ===== Плавный скролл по якорям ===== */
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === "#") return;
-            const target = document.querySelector(targetId);
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
-
-    /* ===== Появление блоков при скролле ===== */
-    const fadeElements = document.querySelectorAll('.fade-up');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.2 });
-    fadeElements.forEach(el => observer.observe(el));
-
-    /* ===== Запуск тяжёлых анимаций с учётом доступности ===== */
-    if (!reducedMotion) {
-        createFireflies();
-        initParallax();
-    }
-</script>
+<script src="script.js" defer></script>
 </body>
 </html>
